@@ -1,0 +1,43 @@
+#! /bin/bash
+
+CLUSTER_DIR="clusters"
+
+NODE_INFO="""
+
+
+    id
+    name
+    ip,
+    http,
+    port,
+    role,
+    master,
+    version,
+
+    heapPercent,
+    ramPercent,
+    heapCurrent,
+    ramCurrent,
+    ramMax,
+
+
+    pid,
+    cpu,
+
+    diskTotal,
+    diskUsed,
+    diskAvail,
+    diskUsedPercent,
+
+
+    queryCacheMemory,
+    queryCacheEvictions,
+    queryCacheHitCount,
+    queryCacheMissCount,
+
+    segmentsCount,
+    segmentsMemory,
+    segmentsIndexWriterMemory,
+    segmentsVersionMapMemory,
+    fixedBitsetMemory
+"""
