@@ -1,6 +1,6 @@
 #! /bin/bash
 
-JoinBy (){
+joinBy (){
   # join by specified seperator.
   # seperator: ","
   # target: "hello" "world"
@@ -12,7 +12,29 @@ JoinBy (){
 }
 
 
-CreateFile()
+splitStr()
+{
+  # -i|--idx are options
+  # for returning specific index element.
+
+  local IFS="$1"
+  str=$2
+  shift 2
+  arr=("${str[@]}")
+  arr=(${arr[*]})
+
+  case $1 in
+    --idx|-i)
+      echo "${arr[$1]}"
+      ;;
+    *)
+      echo "${arr[@]}"
+      ;;
+  esac
+}
+
+
+createFile()
 {
   # if file does exist, return 1
   # otherwise, create file and return 0
@@ -26,8 +48,7 @@ CreateFile()
 }
 
 
-
-MoveTo()
+moveTo()
 {
   dir=$1
 
@@ -41,16 +62,44 @@ MoveTo()
 
 
 
-CheckFor()
+checkFor()
 {
 
   # if user has been added already, return 1 ,
   # otherwise return 0
-  checkarr="$(JoinBy , "$1")"
+  checkarr="$(joinBy , "$1")"
   echo ",${checkarr}," | grep ",${2},"
-  if [ $? == 0 ]; then
+  if [ $? -eq 0 ]; then
     return 1
   else
     return 0
   fi
+}
+
+
+extractLines(){
+
+  # -e or --exclude are options
+
+  p1=$1
+  p2=$2
+  shift 2
+  case $1 in
+    -e|--exclude)
+      shift
+      sed -n '/'"$p1"'/, /'"$p2"'/ p' $2 | sed -e '/'"$1"'/ d' | sed -e '/^\s*$/ d'
+    ;;
+    *)
+      sed -n '/'"${p1}"'/, /'"${p2}"'/ p' $1
+      ;;
+  esac
+
+}
+
+requestInput(){
+  request=$1
+
+#  echo $n "${request}" : $c
+  read -rp "${1}: " name
+  echo "$name"
 }
