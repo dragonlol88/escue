@@ -1,0 +1,32 @@
+[cluster]
+
+Enter cluster name:
+
+[node]
+
+# Node name setting
+node.name=Enter node name(enter q for quit):
+
+# Roles setting
+# node_roles=Enter roles:
+
+# Paths setting
+# data_path=Enter data path:
+# logs_path=Enter logs path:
+config.path=Enter config path:
+
+# Initial master node setting
+# is_initial_master=<>  whether initial_master_nodes(true or false): ")
+
+# Networking setting
+http.host=Enter host:
+http.port=Enter port:
+
+# Server setting
+server.username=Enter user name:
+
+
+# In bash version 4.4 >=
+# mapfile -d ';' -t array < <(printf '%s;' "$in")
+
+[jvm.options.d]
