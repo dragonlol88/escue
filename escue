@@ -1,76 +1,29 @@
 #! /bin/bash
 
 
-set -e
+unset COMMAND
 
 PARENT_PATH=$( cd "$(dirname "$0")"|| exit 1; pwd )
-
-cd $PARENT_PATH
-sources=$(ls "./lib/*.sh")
 
 # shellcheck source=config/globals
 source "${PARENT_PATH}/config/globals"
 
-#sourcing library related with user's command
-for src in $sources
-do
-  is_target=$(echo $src | grep "$1")
-  if [ ! -z "$is_target" ]; then
-    # shellcheck source=lib/*.sh
-        source "${PARENT_PATH}/${src}"
-  fi
-done
+
+usage() {
+
+  cat "${PARENT_PATH}/usage/commands"
+}
 
 case $1 in
-      sync)
-        shift
-        sink_file "$@"
-        echo "transfer files"
-        ;;
+  cluster) COMMAND=$1 ; shift ;;
+  node)    COMMAND=$1 ; shift ;;
+  index)   COMMNAD=$1 ; shift ;;
+  *)
+    usage
+    ;;
+esac
 
-      ilm)
-        echo "Index Lifecycle Mangement Sytem"
-        ;;
-
-      create)
-        echo "Add user's information"
-        shift
-        case $1 in
-          user)
-            echo "Add id or name"
-            add_user $USER_DIR
-            ;;
-          cluster)
-            echo "Add cluster"
-            ;;
-          index)
-            echo "Add index"
-            ;;
-          node)
-            echo "Add node"
-        esac
-        ;;
-
-
-      change)
-        echo "Change Elasticsearch Configuration"
-        shift
-        case $1 in
-          host)
-            shift
-            ;;
-          index)
-            shift
-            ;;
-          heap)
-            shift
-            ;;
-        esac
-        ;;
-
-
-      *)
-        echo "Error: Unrecognized command. Please refer to the documentation for all functionality."
-        exit 1
-        ;;
+case $COMMAND in
+      cluster) bash "${PARENT_PATH}/commands/cluster.sh" "$@";;
+      node   ) bash "${PARENT_PATH}/commands/node.sh" "$@";;
 esac
