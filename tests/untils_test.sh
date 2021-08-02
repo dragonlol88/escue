@@ -90,21 +90,12 @@ teardown() {
   # if user has been added already, return 1 ,
   # otherwise return 0
 
-  clusters="sunny,leo,jennie,theo,jerry"
-  exist_clusters=("sunny" "leo" "jennie" "theo" "jerry")
-  non_exist_clusters=("chris" "bree" "mayo" "lj")
-
-  for cluster in "${exist_clusters[@]}"; do
-    run checkFor $clusters $cluster
-    echo $cluster
-    [ $status == 1 ]
-  done
-
-  for cluster in "${non_exist_clusters[@]}"; do
-    run checkFor $clusters $cluster
-    [ $status == 0 ]
-  done
-
+  root_dir=$(cd .. || exit 1; pwd)
+  echo $root_dir
+  run checkFor "${root_dir}/escue"
+  [ $status = 1 ]
+  run checkFor "${root_dir}/escue2"
+  [ $status = 0 ]
 }
 
 
@@ -112,11 +103,10 @@ teardown() {
 
   #Todo 바꾸기 dir 바꾸기
   file="/home/ec2-user/escue/config/question"
-  testlines=("node.name=Enter node name(enter q for quit):"
-            "config.path=Enter <>'s config path:"
-            "http.host=Enter <>'s host:"
-            "http.port=Enter <>'s port:"
-            "server.username=Enter <>'s user name:")
+  testlines=("config.path=Enter config path:"
+            "http.host=Enter host:"
+            "http.port=Enter port:"
+            "server.username=Enter user name:")
   count=0
 
   # sed -n '/\[node\]/, /\[.*\]/ p' question | sed -e '/^#\|\[.*\]/ d'
@@ -132,5 +122,3 @@ teardown() {
     ((count=count+1))
   done< <(extractLines "\[node\]" "\[.*\]" -e "^#\|\[.*\]\|^\s*$" $file)
 }
-
-
