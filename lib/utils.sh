@@ -39,10 +39,10 @@ createFile()
   # if file does exist, return 1
   # otherwise, create file and return 0
   # input: file which contain directory
-  if [ -e "${1}" ]; then
+  if [ -e "$1" ]; then
     return 1
   else
-    touch "${1}"
+    touch "$1"
     return 0
   fi
 }
@@ -64,12 +64,10 @@ moveTo()
 
 checkFor()
 {
+  where=$1
 
-  # if user has been added already, return 1 ,
-  # otherwise return 0
-  checkarr="$(joinBy , "$1")"
-  echo ",${checkarr}," | grep ",${2},"
-  if [ $? -eq 0 ]; then
+  output=$(ls "${where}" 2>&1 | sed -ne 's/.\+\(No such file or directory\)$/\1/ p')
+  if [ -z "${output}" ]; then
     return 1
   else
     return 0
@@ -90,8 +88,7 @@ extractLines(){
       sed -n '/'"$p1"'/, /'"$p2"'/ p' $2 | sed -e '/'"$1"'/ d' | sed -e '/^\s*$/ d'
     ;;
     *)
-      sed -n '/'"${p1}"'/, /'"${p2}"'/ p' $1
-      ;;
+      sed -n '/'"${p1}"'/, /'"${p2}"'/ p' $1 ;;
   esac
 
 }
@@ -103,3 +100,5 @@ requestInput(){
   read -rp "${1}: " name
   echo "$name"
 }
+
+
