@@ -1,0 +1,9 @@
+Usage: escue cluster [COMMAND] [OPTIONS] CLUSTER
+
+Options:
+
+Commands:
+    create      Create cluster
+    install     Install cluster
+
+

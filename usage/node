@@ -1,0 +1,13 @@
+Usage: escue node [COMMAND] [OPTIONS] NODE
+
+Options:
+    [-c | --cluster, required ]   string  name of cluster
+    [-t | --tar,     required ]
+
+Commands:
+    create      Create node
+    change      Change node settings
+    install     Install node
+
+
+
