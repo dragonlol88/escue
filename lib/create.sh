@@ -4,7 +4,6 @@
 source "./lib/utils.sh"
 source "./config/globals"
 
-
 questionPath='/home/ec2-user/escue/config/question'
 clusterName="cluster.name"
 nodeName="node.name"
@@ -16,63 +15,42 @@ serverUserName="server.username"
 
 configureCluster()
 {
-
-  cluster=$(requestInput "Enter cluster name: ")
-
-  # Check cluster name if exist
-  # if exist, exit
-  output=$(ls "${1}/${cluster}" 2>&1 | sed -ne 's/.\+\(No such file or directory\)$/\1/ p')
-
-  # status check
-  if [ -z "${output}" ]; then
-    echo "$cluster has been added already"
-    return 1
-  else
-    cur_cluster="$(moveTo "${cur_loc}/${cluster}")"
-  fi
+  moveTo "${cur_loc}/${1}"
 }
 
 createCluster()
 {
   # register cluster
   # first, make cluster directory
-  # second, make nodes
 
   # $1  cluster directory
-  cur_cluster=''
+  # $2  cluster name
+
   if [ ! -d "${1}" ]; then
     mkdir -p $1
   fi
 
+  cluster=$2
   cur_loc=$( cd "$1" || exit 1; pwd)
-  while true; do
-    configureCluster ${cur_loc}
 
-    if [ $? -eq 1 ]; then
-      continue
-    else
-      break
-    fi
-  done
+  checkFor "${cur_loc}/${cluster}"
+  status=$?
+  # status check
+  if [ $status = 1 ]; then
+    echo "$cluster has been added already"
+    echo "Check clusters (escue cluster list) "
+    exit 1
+  fi
 
-  # create multiple node
-  # for quit, enter q
-  while true; do
-    echo $cur_cluster
-    createNode "$cur_cluster"
-    if [ $? -eq 0 ]; then
-      continue
-    else
-      break
-    fi
-  done
+  configureCluster $cluster
+  return 0
 
 }
 
-
 configuredNode()
 {
-
+  configs+=(["$clusterName"]="$1")
+  configs+=(["$nodeName"]="$2")
   while read question; do
     count=0
     while read line; do
@@ -85,21 +63,6 @@ configuredNode()
     done< <(echo $question | sed 's/\(.\+\)=\(.\+\)/\1\n\2/g')
 
     read -u 1 -p "${q} " input
-    if [ $nodeName = $key ]; then
-      if [ "${input}" = 'q' ]; then
-        return 1
-      fi
-
-      # Check if node exist
-      # Todo stderr 보내기
-      output=$(ls "${1}/${input}" 2>&1 | sed -ne 's/.\+\(No such file or directory\)$/\1/ p')
-
-      # status check
-      if [ -z "${output}" ]; then
-        echo "${input} has been added already, enter other name"
-        return 2
-      fi
-    fi
 
     # replace q to input
     configs+=( ["${key}"]="${input}" )
@@ -115,15 +78,30 @@ createNode()
 {
 
   declare -A configs
-  case $1 in
-    -t)
-      shift
-      testCaseNode "$@"
-      ;;
-    *)
-      configuredNode $1
-    ;;
-  esac
+  cluster=$1
+  cluster_dir="${CLUSTER_DIR}/${cluster}"
+  nodename=$2
+
+  # Check cluster if exist
+  checkFor "${cluster_dir}"
+  status=$?
+  # status check
+  if [ $status = 0 ]; then
+      echo "${cluster} cluster does not exit, first create cluster"
+      echo "Command: escue cluster create ${cluster}"
+      exit 1
+  fi
+
+  # Check node if exist
+  checkFor "${cluster_dir}/${nodename}"
+  status=$?
+  # status check
+  if [ $status = 1 ]; then
+      echo "${nodename} has been added already, enter other name"
+      exit 1
+  fi
+
+  configuredNode $cluster $nodename
   # save status
   # because status code($1) has been change after if clause
   configureNodeStatus=$?
@@ -131,6 +109,7 @@ createNode()
   if [ $configureNodeStatus -eq 0 ]; then
     printf "%s\n" \
           "[elasticsearch.yml]" \
+          "${clusterName}=${configs[${clusterName}]}"\
           "${nodeName}=${configs[${nodeName}]}"\
           "${HTTPHost}=${configs[${HTTPHost}]}"\
           "${HTTPPort}=${configs[${HTTPPort}]}"\
@@ -140,11 +119,7 @@ createNode()
           ""\
           "[server]"\
           "${serverUserName}=${configs[${serverUserName}]}"\
-          > "/${1}/${configs[${nodeName}]}"
+          > "${cluster_dir}/${nodename}"
     return 0
-  elif [ $configureNodeStatus -eq 2 ]; then
-    return 0
-  else
-    return 1
   fi
 }
