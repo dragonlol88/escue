@@ -5,7 +5,6 @@ Enter cluster name:
 [node]
 
 # Node name setting
-node.name=Enter node name(enter q for quit):
 
 # Roles setting
 # node_roles=Enter roles:
