@@ -1,6 +1,9 @@
 #! /bin/bash
 
-CLUSTER_DIR="clusters"
+
+
+CLUSTER_DIR="$(pwd)/cluster"
+QUSTION_PATH="$(pwd)/$0/question"
 
 NODE_INFO="""
 
