@@ -1,31 +1,29 @@
-[cluster]
-
-Enter cluster name:
-
 [node]
 
-# Node name setting
-
 # Roles setting
-# node_roles=Enter roles:
+node.roles=Enter roles:
+
 
 # Paths setting
-# data_path=Enter data path:
-# logs_path=Enter logs path:
-config.path=Enter config path:
-
-# Initial master node setting
-# is_initial_master=<>  whether initial_master_nodes(true or false): ")
+path.data=Enter data path:
+path.logs=Enter logs path:
 
 # Networking setting
 http.host=Enter host:
-http.port=Enter port:
+http.port=Enter http port:
+transport.port=Enter transport port:
+
+# seed_hosts setting
+discovery.seed_hosts=Enter seed hosts:
+
+# Cluster initial master nodes
+cluster.initial_master_nodes=Enter initial master nodes:
 
 # Server setting
 server.username=Enter user name:
+install.path=Enter install path:
 
 
-# In bash version 4.4 >=
-# mapfile -d ';' -t array < <(printf '%s;' "$in")
+config.path=Enter config path:
+jvm.heap=Enter heap size:
 
-[jvm.options.d]
