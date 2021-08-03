@@ -5,6 +5,24 @@
 CLUSTER_DIR="$(pwd)/cluster"
 QUSTION_PATH="$(pwd)/$0/question"
 
+
+questionPath='/home/ec2-user/escue/config/question'
+clusterName="cluster.name"
+nodeName="node.name"
+HTTPHost="http.host"
+HTTPPort="http.port"
+nodeRoles="node.roles"
+dataPath="path.data"
+logsPath="path.logs"
+configPath="config.path"
+installPath="install.path"
+seedHosts="discovery.seed_hosts"
+initialMasterNodes="cluster.initial_master_nodes"
+serverUserName="server.username"
+serverHost="sever.host"
+jvmHeap="jvm.heap"
+
+
 NODE_INFO="""
 
 
