@@ -1,27 +1,28 @@
 [node]
 
 # Roles setting
-node.roles=Enter roles:
+node.roles=Enter node roles:
 
 
 # Paths setting
-path.data=Enter data path:
-path.logs=Enter logs path:
+path.data=Enter node data path:
+path.logs=Enter node logs path:
 
 # Networking setting
-http.host=Enter host:
-http.port=Enter http port:
-transport.port=Enter transport port:
+http.host=Enter node host:
+http.port=Enter node http port:
+transport.port=Enter node transport port:
 
 # seed_hosts setting
-discovery.seed_hosts=Enter seed hosts:
+discovery.seed_hosts=Enter node seed hosts:
 
 # Cluster initial master nodes
-cluster.initial_master_nodes=Enter initial master nodes:
+cluster.initial_master_nodes=Enter node initial master nodes:
 
 # Server setting
-server.username=Enter user name:
-install.path=Enter install path:
+server.host=Enter server host:
+server.username=Enter server user name:
+install.path=Enter server install path:
 
 
 config.path=Enter config path:
