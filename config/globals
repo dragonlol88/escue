@@ -1,7 +1,5 @@
 #! /bin/bash
 
-
-
 CLUSTER_DIR="$(pwd)/cluster"
 QUSTION_PATH="$(pwd)/$0/question"
 
@@ -19,46 +17,5 @@ installPath="install.path"
 seedHosts="discovery.seed_hosts"
 initialMasterNodes="cluster.initial_master_nodes"
 serverUserName="server.username"
-serverHost="sever.host"
+serverHost="server.host"
 jvmHeap="jvm.heap"
-
-
-NODE_INFO="""
-
-
-    id
-    name
-    ip,
-    http,
-    port,
-    role,
-    master,
-    version,
-
-    heapPercent,
-    ramPercent,
-    heapCurrent,
-    ramCurrent,
-    ramMax,
-
-
-    pid,
-    cpu,
-
-    diskTotal,
-    diskUsed,
-    diskAvail,
-    diskUsedPercent,
-
-
-    queryCacheMemory,
-    queryCacheEvictions,
-    queryCacheHitCount,
-    queryCacheMissCount,
-
-    segmentsCount,
-    segmentsMemory,
-    segmentsIndexWriterMemory,
-    segmentsVersionMapMemory,
-    fixedBitsetMemory
-"""
