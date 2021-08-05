@@ -1,17 +1,33 @@
 #! /bin/bash
 
 load test_helper.sh
+RSANAME="testrsa"
 
 setup()
 {
   source ./lib/transport.sh
-  Transport
   rm -rf testing && mkdir testing
   cd testing
 
+  testing_dir=$(pwd)
+  cp_file="auth_copy"
+  printf "$RSANAME\n" | ssh-keygen -t rsa -N ''
+  cat ~/.ssh/authorized_keys > $cp_file
+  cat "${testing_dir}/${RSANAME}.pub" &>> ~/.ssh/authorized_keys
+
+  dummy_host=11.11.11.11
+  host=localhost
+  port=9200
+  user=$(whoami)
+  identity_file="${testing_dir}/${RSANAME}"
+  ssh_options=$5
+  cluster=$6
+  node=$7
+  Transport "$host" "$port" "$user" "$identity_file" "$ssh_options" "$cluster" "$node"
 }
 
 teardown() {
+  cat $cp_file > ~/.ssh/authorized_keys
   cd ..
   rm -rf testing
 }
@@ -19,16 +35,36 @@ teardown() {
 
 @test "Test Http Request" {
 
-  http_trasport
-  [ -e "./http_request" ]
-  [ "$(head -n 1 http_request)" = "Transport HTTP request using curl" ]
+  echo helloworld
+}
+
+@test "Test scp File Transport with identity file" {
+  touch testfile
+  transport_dir=$(mkdir transport; cd transport || exit 1; pwd)
+  scp_transport testfile $transport_dir
+
+  [ -e "${transport_dir}/testfile" ]
 
 }
 
-@test "Test scp File Transport" {
-  scp_file_transport
-  [ -e "./scp_file_transfer" ]
-  [ "$(head -n 1 scp_file_transfer)" = "Transport file using scp protocol" ]
-
+@test "Test scp File Transport with no identity file" {
+  touch testfile
+  identity_file=""
+  transport_dir=$(mkdir transport; cd transport || exit 1; pwd)
+  scp_transport testfile $transport_dir
+  [ -e "${transport_dir}/testfile" ]
 
 }
+
+@test "Test ssh File Transport" {
+  test_file=$testing_dir/helloescue
+  ssh_command "echo helloescue > $test_file "
+
+  [ -e "$testing_dir/helloescue" ]
+
+  line=$(cat $test_file)
+  [ $line = 'helloescue' ]
+}
+
+
+
