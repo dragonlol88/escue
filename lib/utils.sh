@@ -1,6 +1,6 @@
 #! /bin/bash
 
-joinBy (){
+function join_by(){
   # join by specified seperator.
   # seperator: ","
   # target: "hello" "world"
@@ -12,7 +12,7 @@ joinBy (){
 }
 
 
-splitStr()
+function split_str()
 {
   # -i|--idx are options
   # for returning specific index element.
@@ -33,9 +33,8 @@ splitStr()
   esac
 }
 
+function create_file() {
 
-createFile()
-{
   # if file does exist, return 1
   # otherwise, create file and return 0
   # input: file which contain directory
@@ -48,7 +47,7 @@ createFile()
 }
 
 
-moveTo()
+function move_to()
 {
   dir=$1
 
@@ -62,7 +61,7 @@ moveTo()
 
 
 
-checkFor()
+function check_for()
 {
   where=$1
 
@@ -75,7 +74,7 @@ checkFor()
 }
 
 
-extractLines(){
+extract_lines(){
 
   # -e or --exclude are options
 
@@ -103,7 +102,7 @@ extractLines(){
 
 }
 
-requestInput(){
+function request_input(){
   request=$1
 
 #  echo $n "${request}" : $c
@@ -112,7 +111,7 @@ requestInput(){
 }
 
 
-getParam()
+function get_param ()
 {
   echo $(sed -n '/'"$1"'/ p' $3 | cut -d${2} -f 2 )
 }

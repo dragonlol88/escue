@@ -8,7 +8,7 @@ unset VERSION
 PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
 source "${PARENT_PATH}/lib/create.sh"
 
-usage() {
+fnction usage() {
   cat "${PARENT_PATH}/usage/cluster"
 }
 
@@ -42,8 +42,8 @@ fi
 
 
 case $COMMAND in
-  create ) createCluster "${PARENT_PATH}/cluster/" "$CLUSTER" ;;
-  install) installCluster "$CLUSTER" ;;
+  create ) create_cluster "${PARENT_PATH}/cluster/" "$CLUSTER" ;;
+  install) install_cluster "$CLUSTER" ;;
   list   ) get;;
   change)  ;;
   -h|--help) usage ;;

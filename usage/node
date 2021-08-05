@@ -1,8 +1,13 @@
 Usage: escue node [COMMAND] [OPTIONS] NODE
 
 Options:
-    [-c | --cluster, required ]   string  name of cluster
-    [-t | --tar,     required ]
+    -c | --cluster)   string  name of cluster
+                              required always
+    -f | --file   )   string  install file location
+                              required when install
+    -i |          )   string  identity file for connecting
+                              remote server
+    -o |          )   string  ssh or scp options
 
 Commands:
     create      Create node

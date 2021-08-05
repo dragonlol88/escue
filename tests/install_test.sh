@@ -64,7 +64,7 @@ teardown() {
 
 @test "Install creating elasticsearch.yml Test" {
   nodeloc="testnode"
-  node_info=$(extractLines "\[elasticsearch.yml\]" "^\[.*\]$" -e "^#\|.*:$" $nodeloc "$")
+  node_info=$(extract_lines "\[elasticsearch.yml\]" "^\[.*\]$" -e "^#\|.*:$" $nodeloc "$")
 
   testlines=(
   "[elasticsearch.yml]"
@@ -86,12 +86,11 @@ teardown() {
   done< <(echo "$node_info")
 }
 
-
 @test "Install extract elasticsearch.yml Test" {
   nodeloc="testnode"
   # testing 으로 복사하는 과정에서 마지막 space가 없어짐
   # testing 할때는 .*:\s$ -> .*:$
-  node_info=$(extractLines "\[elasticsearch.yml\]" "^\[.*\]$" -e "^#\|.*:$" $nodeloc "$")
+  node_info=$(extract_lines "\[elasticsearch.yml\]" "^\[.*\]$" -e "^#\|.*:$" $nodeloc "$")
   ymlfile=$(echo "$node_info" | sed -ne 's/^\[\(.*\)\]$/\1/ p')
   [ $ymlfile = 'elasticsearch.yml' ]
 

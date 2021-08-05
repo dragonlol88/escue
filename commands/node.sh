@@ -8,7 +8,7 @@ PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
 source "${PARENT_PATH}/lib/create.sh"
 source "${PARENT_PATH}/lib/install.sh"
 
-usage() {
+function usage() {
   cat "${PARENT_PATH}/usage/node"
 }
 
@@ -49,10 +49,10 @@ fi
 NODE="$@"
 
 case $COMMAND in
-  create)  createNode $CLUSTER $NODE  ;;
+  create)  create_node $CLUSTER $NODE  ;;
   change)  ;;
   install)
-    installNode $CLUSTER $NODE $FILE $INDENTY_FILE $SSHOPTIONS ;;
+    install_node $CLUSTER $NODE $FILE $INDENTY_FILE $SSHOPTIONS ;;
   -h | --help) usage ;;
   *) usage ;;
 

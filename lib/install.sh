@@ -5,19 +5,18 @@ source "./lib/utils.sh"
 source "./lib/transport.sh"
 
 
-parse_params(){
+function parse_params(){
 
-  user=$(getParam $serverUserName "=" $1)
-  host=$(getParam $serverHost "=" $1)
-  install_path=$(getParam $installPath "=" $1)
-  port=$(getParam $HTTPPort ":" $2)
-  data_path=$(getParam $dataPath ":" $2)
-  logs_path=$(getParam $logsPath ":" $2)
+  user=$(get_param $serverUserName "=" $1)
+  host=$(get_param $serverHost "=" $1)
+  install_path=$(get_param $installPath "=" $1)
+  port=$(get_param $HTTPPort ":" $2)
+  data_path=$(get_param $dataPath ":" $2)
+  logs_path=$(get_param $logsPath ":" $2)
 
 }
 
-
-installNode() {
+function install_node() {
 
   cluster=$1
   node=$2
@@ -80,6 +79,6 @@ installNode() {
 }
 
 
-installPlugins() {
+install_plugins() {
   echo "Install plugins"
 }

@@ -4,7 +4,7 @@
 source "./lib/utils.sh"
 source "./config/globals"
 
-createCluster()
+function create_cluster()
 {
   # register cluster
   # first, make cluster directory
@@ -19,7 +19,7 @@ createCluster()
   cluster=$2
   cur_loc=$( cd "$1" || exit 1; pwd)
 
-  checkFor "${cur_loc}/${cluster}"
+  check_for "${cur_loc}/${cluster}"
   status=$?
   # status check
   if [ $status = 1 ]; then
@@ -27,12 +27,12 @@ createCluster()
     echo "Check clusters (escue cluster list) "
     exit 1
   fi
-  moveTo "${cur_loc}/$cluster"
+  move_to "${cur_loc}/$cluster"
   return 0
 
 }
 
-configuredNode()
+function configure_node()
 {
 
   configs+=(["$clusterName"]="$1")
@@ -55,12 +55,12 @@ configuredNode()
 
   # Extract lines from [node] to next [any string]
   # And remove comment and [...] lines
-  done< <(extractLines "\[node\]" "\[.*\]" -e "^#\|\[.*\]\|^[[:space:]]*$" "$questionPath" )
+  done< <(extract_lines "\[node\]" "\[.*\]" -e "^#\|\[.*\]\|^[[:space:]]*$" "$questionPath" )
   return 0
 }
 
 
-createNode()
+function create_node()
 {
 
   declare -A configs
@@ -69,7 +69,7 @@ createNode()
   nodename=$2
 
   # Check cluster if exist
-  checkFor "${cluster_dir}"
+  check_for "${cluster_dir}"
   status=$?
   # status check
   if [ $status = 0 ]; then
@@ -79,20 +79,20 @@ createNode()
   fi
 
   # Check node if exist
-  checkFor "${cluster_dir}/${nodename}"
+  check_for "${cluster_dir}/${nodename}"
   status=$?
   # status check
   if [ $status = 1 ]; then
       echo "${nodename} has been added already, enter other name"
       exit 1
   fi
-  configuredNode $cluster $nodename
+  configure_node $cluster $nodename
   # save status
   # because status code($1) has been change after if clause
   configureNodeStatus=$?
 
   if [ $configureNodeStatus -eq 0 ]; then
-    moveTo "${cluster_dir}/${nodename}"
+    move_to "${cluster_dir}/${nodename}"
     yml_file="${cluster_dir}/${nodename}/${YMLFILE}"
     jvm_file="${cluster_dir}/${nodename}/${JVMFILE}"
     sever_file="${cluster_dir}/${nodename}/${SEVERFILE}"
