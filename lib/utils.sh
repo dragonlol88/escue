@@ -81,14 +81,24 @@ extractLines(){
 
   p1=$1
   p2=$2
+
   shift 2
   case $1 in
     -e|--exclude)
       shift
-      sed -n '/'"$p1"'/, /'"$p2"'/ p' $2 | sed -e '/'"$1"'/ d' | sed -e '/^\s*$/ d'
+      if [ ! -z $3 ]; then
+        sed -n '/'"$p1"'/, /'"$p2"'/ p' $2 | sed -e '/'"$1"'/ d' | sed -e ''"$3"' d'
+      else
+        sed -n '/'"$p1"'/, /'"$p2"'/ p' $2 | sed -e '/'"$1"'/ d'
+      fi
     ;;
     *)
-      sed -n '/'"${p1}"'/, /'"${p2}"'/ p' $1 ;;
+      if [ ! -z $2 ]; then
+        sed -n '/'"${p1}"'/, /'"${p2}"'/ p' $1 | sed -e ''"$3"' d'
+      else
+        sed -n '/'"${p1}"'/, /'"${p2}"'/ p' $1
+      fi
+      ;;
   esac
 
 }
@@ -101,4 +111,9 @@ requestInput(){
   echo "$name"
 }
 
+
+getParam()
+{
+  echo $(sed -n '/'"$1"'/ p' $3 | cut -d${2} -f 2 )
+}
 
