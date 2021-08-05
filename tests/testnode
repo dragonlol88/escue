@@ -1,0 +1,21 @@
+[elasticsearch.yml]
+cluster.name: hyundai-ivm
+node.roles:
+node.name: node2
+path.data: /data/es/data
+path.logs: /data/es/logs
+http.host: 172.31.1.65
+http.port: 9200
+discovery.seed_hosts: [172.31.3.134:9300]
+cluster.initial_master_nodes: [node1,node2]
+
+[syncronize]
+config.path=
+
+[server]
+server.username=ec2-user
+install.path=/home/ec2-user/install
+
+[jvm.options.d/jvm.options]
+-Xms396mb
+-Xmx396mb
