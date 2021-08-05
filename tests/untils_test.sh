@@ -7,6 +7,7 @@ setup()
   source ./lib/utils.sh
   source ./config/globals
   rm -rf testing && mkdir testing
+  cp ./config/question ./testing
   cd testing
 
 }
@@ -103,10 +104,53 @@ teardown() {
 
   #Todo 바꾸기 dir 바꾸기
   file="/home/ec2-user/escue/config/question"
-  testlines=("config.path=Enter config path:"
-            "http.host=Enter host:"
-            "http.port=Enter port:"
-            "server.username=Enter user name:")
+  testlines=("node.roles=Enter node roles:"
+             "path.data=Enter node data path:"
+              "path.logs=Enter node logs path:"
+              "http.host=Enter node host:"
+              "http.port=Enter node http port:"
+              "transport.port=Enter node transport port:"
+              "discovery.seed_hosts=Enter node seed hosts:"
+              "cluster.initial_master_nodes=Enter node initial master nodes:"
+              "server.host=Enter server host:"
+              "server.username=Enter server user name:"
+              "install.path=Enter server install path:"
+              "config.path=Enter config path:"
+              "jvm.heap=Enter heap size:"
+            )
+  count=0
+  # sed -n '/\[node\]/, /\[.*\]/ p' question | sed -e '/^#\|\[.*\]/ d'
+  while read line; do
+    if [ -z "${line}" ] ; then
+      continue
+    fi
+    trim=$(echo $line | sed -e 's/\s*$//')
+
+#    echo "${testlines[$count]}"
+#    echo $trim
+    [ "$trim" = "${testlines[$count]}" ]
+    ((count=count+1))
+  done< <(extractLines "\[node\]" "\[.*\]" -e "^#\|\[.*\]\|^\s*$" $file)
+}
+
+
+@test "Utils extractLines with trim last line Test" {
+
+  #Todo 바꾸기 dir 바꾸기
+  file="/home/ec2-user/escue/config/question"
+  testlines=("node.roles=Enter node roles:"
+             "path.data=Enter node data path:"
+              "path.logs=Enter node logs path:"
+              "http.host=Enter node host:"
+              "http.port=Enter node http port:"
+              "transport.port=Enter node transport port:"
+              "discovery.seed_hosts=Enter node seed hosts:"
+              "cluster.initial_master_nodes=Enter node initial master nodes:"
+              "server.host=Enter server host:"
+              "server.username=Enter server user name:"
+              "install.path=Enter server install path:"
+              "config.path=Enter config path:"
+            )
   count=0
 
   # sed -n '/\[node\]/, /\[.*\]/ p' question | sed -e '/^#\|\[.*\]/ d'
@@ -114,11 +158,24 @@ teardown() {
     if [ -z "${line}" ] ; then
       continue
     fi
-    echo $line
     trim=$(echo $line | sed -e 's/\s*$//')
 
-    echo "${testlines[$count]}"
     [ "$trim" = "${testlines[$count]}" ]
     ((count=count+1))
-  done< <(extractLines "\[node\]" "\[.*\]" -e "^#\|\[.*\]\|^\s*$" $file)
+  done< <(extractLines "\[node\]" "\[.*\]" -e "^#\|\[.*\]\|^\s*$" $file "$")
+}
+
+
+@test "Utils getParam Test" {
+
+  echo """
+  server.username=ec2-user
+  http.port: 9200
+  """ > testfile
+
+  username=$(getParam "server.username"  "=" testfile )
+  port=$(getParam "http.port"  ":" testfile )
+  [ $username = 'ec2-user' ]
+  [ $port = '9200' ]
+
 }
