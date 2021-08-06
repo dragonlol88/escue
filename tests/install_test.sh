@@ -95,3 +95,52 @@ teardown() {
   [ $ymlfile = 'elasticsearch.yml' ]
 
 }
+
+
+@test "Install set header map Test" {
+  INSTALL_HEADERS=("Node Name" "Transmit" "Decompress" "Configuration" "Install")
+  declare -A HEADER_MAP
+  function _set_header_map() {
+    for header in "${INSTALL_HEADERS[@]}"; do
+      header_len=${#header}
+      HEADER_MAP+=( ["${header}"]="${header_len}" )
+    done
+  }
+  _set_header_map
+
+  [ ${HEADER_MAP["Node Name"]} -eq 9 ]
+  [ ${HEADER_MAP["Transmit"]} -eq 8 ]
+}
+
+@test "Install set center location Test" {
+  INSTALL_HEADERS=("NodeeName" "Transmit" "Decompress" "Configuration" "Install")
+  declare -A HEADER_MAP
+
+  function _set_header_map() {
+    for header in "${INSTALL_HEADERS[@]}"; do
+      header_len=${#header}
+      HEADER_MAP+=( ["${header}"]="${header_len}" )
+    done
+  }
+  _set_header_map
+
+
+
+  _set_center() {
+    first_col_len=${HEADER_MAP["NodeeName"]}
+    lens=()
+    for elem in "$@"; do
+      lens+=(${#elem})
+    done
+    max_elem_len=$(printf "%d\n" "${lens[@]}" | sort -rn | head -1)
+
+    CENTER_LOC=$([[ $max_elem_len -gt $first_col_len ]] && echo $(((max_elem_len+1)/2)) || echo $(((first_col_len+1)/2)))
+  }
+  _set_center "set" "cent" "map"
+  [ $CENTER_LOC -eq 5 ]
+
+  _set_center "aaa" "aaaaaaaaaaaaaaa" "aaaaaaa"
+  echo $CENTER_LOC
+  [ $CENTER_LOC -eq 8 ]
+
+}
