@@ -3,7 +3,7 @@
 source "./config/globals"
 source "./lib/utils.sh"
 source "./lib/transport.sh"
-
+source "./lib/formatter.sh"
 
 function parse_params(){
 
@@ -16,7 +16,18 @@ function parse_params(){
 
 }
 
+function install_cluster() {
+
+}
 function install_node() {
+    node=$2
+    InstallFormatter $node
+    first_col $node
+    _install "$@"
+    printf "\n"
+}
+
+function _install() {
 
   cluster=$1
   node=$2
@@ -24,60 +35,58 @@ function install_node() {
   identity_file=$4
   ssh_options=$5
 
-  # ==============  FLOW   ======================
-  # call node information( username, host, install directory)
+
   nodeloc="$CLUSTER_DIR/$cluster/$node"
   yml_file="$nodeloc/$YMLFILE"
   jvm_file="$nodeloc/$JVMFILE"
   sever_file=$nodeloc/$SEVERFILE
 
+  STDOUT=$(mktemp)
+
   parse_params $sever_file $yml_file
-
-  # -------------- scp part ---------------------
-#            # transfer install tar file
-#  echo $host
-#  echo $port
-#  echo $identity_file
-#  echo $ssh_options
-#  echo $cluster
-#  echo $node
-  Transport "$host" "$port" "$user" "$identity_file" "$ssh_options" "$cluster" "$node"
+  Transport $host $port $user $identity_file  $cluster $node $STDOUT $ssh_options
 
 
-  printf "%s\n" "Creating install directory....."
-  ssh_command "mkdir ${install_path}"
+  function _transmit() {
 
-  printf "%s\n" "Transmitting install files....."
-  scp_transport $file $install_path
+    ssh_command "mkdir $install_path" && \
+    scp_transport $file $install_path && \
+    check_sucess $TRANSMIT_HEADER && return 0 || \
+    check_fail $TRANSMIT_HEADER && return 1
 
+  }
 
-  # -------------- ssh command part -------------
-  # decompress tar file
-  printf "%s\n" "Decompress install files....."
-  compress_file=${file##*/}
-  es_path=$(ssh_command "cd $install_path ; tar -xvf $compress_file | sed -ne '1p'")
+  function _decompress() {
 
-  config_path="${install_path}/${es_path}config"
-  printf "%s\n" "Creating elasticsearch.yml....."
-  scp_transport $yml_file "${config_path}/$YMLFILE"
+    ssh_command "cd $install_path ; tar -xvf ${file##*/} | sed -ne '1p'"  && \
+    check_sucess $TRANSMIT_HEADER && return 0 || \
+    check_fail $TRANSMIT_HEADER && return 1
 
-  printf "%s\n" "Creating jvm.options....."
-  scp_transport $jvm_file "${config_path}/$JVMDIR/$JVMFILE"
+  }
 
-  printf "%s\n" "Create elasticsearch data path....."
-  ssh_command "sudo [ ! -d  $data_path ] && sudo mkdir -p $data_path ; sudo chown -R $user $data_path"
+  function _configure() {
+    es_path=$(cat $STDOUT)
+    config_path="${install_path}/${es_path}config"
+    scp_transport $yml_file "${config_path}/$YMLFILE" && \
+    scp_transport $jvm_file "${config_path}/$JVMDIR/$JVMFILE" && \
+    ssh_command "sudo [ ! -d  $data_path ] && sudo mkdir -p $data_path ; sudo chown -R $user $data_path" && \
+    ssh_command "sudo [ ! -d  $logs_path ] && sudo mkdir -p $logs_path ; sudo chown -R $user $logs_path" && \
+    check_sucess $CONFIGURATION_HEADER && return 0 || \
+    check_fail $TRANSMIT_HEADER && return 1
+  }
 
-  printf "%s\n" "Create elasticsearch logs path....."
-  ssh_command "sudo [ ! -d  $logs_path ] && sudo mkdir -p $logs_path ; sudo chown -R $user $logs_path"
+  function _install_es() {
+    ssh_command "cd ${install_path}/${es_path}; bin/elasticsearch -d -p pid | exit" && \
+    check_sucess $INSTALL_HEADER && return 0 || \
+    check_fail $INSTALL_HEADER && return 1
 
-  printf "%s\n" "Install elasticsearch....."
-  ssh_command "cd ${install_path}/${es_path}; bin/elasticsearch -d -p pid | exit" "ConnectTimeout=60"
+  }
+  _transmit && _decompress && _configure && _install_es
 
-  printf "$s\n" "Checking cluster connection....."
-  printf "%s\n" "Complete install"
-  return 0
+  rm $STDOUT
+  INSTALLSTATUS=$?
+  return $INSTALLSTATUS
 }
-
 
 install_plugins() {
   echo "Install plugins"
