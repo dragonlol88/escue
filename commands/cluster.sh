@@ -7,21 +7,23 @@ unset VERSION
 
 PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
 source "${PARENT_PATH}/lib/create.sh"
-
-fnction usage() {
+source "${PARENT_PATH}/lib/install.sh"
+function usage()
+{
   cat "${PARENT_PATH}/usage/cluster"
 }
 
 COMMAND=$1; shift
-
-PARSED_ARGUMENTS=$(getopt -a -n "escue cluster" -o v: --long version: -- "$@")
+PARSED_ARGUMENTS=$(getopt -a -n "escue cluster" -o o:i:f: --long version: -- "$@")
 VALID_ARGUMENTS=$?
 eval set -- "$PARSED_ARGUMENTS"
 
 
 while : ; do
     case $1 in
-      -v|--version) VERSION=1.34 ; shift ;;
+      -f|--file   ) FILE=$2         ; shift 2 ;;
+      -i          ) INDENTY_FILE=$2 ; shift 2 ;;
+      -o          ) SSHOPTIONS=$2   ; shift 2 ;;
       --) shift; break ;;
       *)
         echo "Unexpected option: $1 - this should not happen."
@@ -40,10 +42,9 @@ if [ -z $CLUSTER ]; then
 fi
 
 
-
 case $COMMAND in
   create ) create_cluster "${PARENT_PATH}/cluster/" "$CLUSTER" ;;
-  install) install_cluster "$CLUSTER" ;;
+  install) install_cluster $CLUSTER $FILE $INDENTY_FILE $SSHOPTIONS ;;
   list   ) get;;
   change)  ;;
   -h|--help) usage ;;
