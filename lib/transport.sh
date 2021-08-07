@@ -6,43 +6,36 @@ source "./config/globals"
 parse_options() {
   # trim 양쪽 space
   options=$(echo $1 | sed -n -e 's/^\s*// p' | sed -n -e 's/\s*$//p')
-  if [ "$options" != ',' ]; then
-    options="-o $(echo $options | sed -n -e 's/,/ -o /g p')"
-  else
-    options=''
-  fi
+  [[ "$options" != ',' ]] && options="-o $(echo $options | sed -n -e 's/,/ -o /g p')" || options=''
 }
+
+
 
 Transport()
 {
-
   host=$1
   port=$2
   user=$3
   identity_file=$4
-  ssh_options=$5
-  cluster=$6
-  node=$7
+  cluster=$5
+  node=$6
+  STDOUT=$7
+  ssh_options=$8
 
-  http_trasport()
-  {
-    # $1=method
-    # $2=url
-    # $3=params
-    # $4=data
-    # $5=headers
-    # Options(timeout)
 
-    case $1 in
-      -t) echo "Transport HTTP request using curl" > http_request ;;
-       *)
+  function construct_ssh_params(){
+    [[ -n "$identity_file" ]] && \
+    ssh_params="$options -i $identity_file "$user@$host" $command" || \
+    ssh_params="$options "$user@$host" $command"
+    }
 
-         echo "Wait for develop"
-      ;;
-    esac
+  function construct_scp_params(){
+    [[ -n "$identity_file" ]] && \
+    scp_params="$options -i $identity_file $source "$user@$host":$target" || \
+    scp_params="$options $source "$user@$host":$target"
   }
 
-  ssh_command(){
+  function ssh_command(){
 
     # options: ssh options
     # key=value or key=value,value
@@ -50,69 +43,45 @@ Transport()
     # multiple options
     # -o key1=value1 -o key2=value2
 
-    local stderr
-    if [ ! -d logs ]; then
-        mkdir logs
-    fi
-    stderr="./logs/$(uuidgen)"
     command=$1 # requirement parameter
     shift
     options="$ssh_options,"$@""
+
+    STDERR=$(mktemp)
+    exec {STDERR_W}>$STDERR
+    exec {STDERR_R}<$STDERR
+    rm $STDERR
     parse_options $options
-    if [ -n "$identity_file" ]; then
-      OUTPUT=$(ssh $options -i $identity_file "$user@$host" $command 2>${stderr})
-    else
-      OUTPUT=$(ssh $options "$user@$host" $command 2>${stderr})
-    fi
-    status=$?
-    if [ $status -ne 0  ]; then
-      ERROR=$(sed -n '1, $ p' ${stderr})
-      rm -rf ${stderr}
-      echo "ssh $command is failed  $options"
-      echo "Check the transport error log(escue logs transporterror)"
-      echo "[ `date` ssh_command cluster: $cluster node: $node message: $ERROR]" &>> $TRANSPORTERRORLOGPATH
-      exit 1
-    fi
-    echo "$OUTPUT"
-    return 0
+    construct_ssh_params
+    ssh $ssh_params >$STDOUT 2>&$STDERR_W
+    [[ $? -ne 0  ]] && error_logs "ssh" $STDERR_R && return 1 || return 0
   }
 
-  scp_transport()
+  function scp_transport()
   {
-    local stderr
-    if [ ! -d logs ]; then
-        mkdir logs
-    fi
-    stderr="./logs/$(uuidgen)"
-    case $1 in
-      -t) echo "Transport file using scp protocol" > scp_file_transfer ;;
-       *)
-         source=$1
-         target=$2
-         # source
-         # target directory
-         shift 2
-         options="$ssh_options,"$@""
-         parse_options $options
-         if [ -n "$identity_file" ]; then
-           OUTPUT=$(scp $options -i  $identity_file $source "$user@$host:$target" 2>${stderr})
-         else
-           OUTPUT=$(scp $options $source "$user@$host:$target" 2>${stderr})
-         fi
+    source=$1
+    target=$2
 
-         status=$?
-         if [ $status -ne 0 ]; then
-            ERROR=$(sed -n '1, $ p' ${stderr})
-            rm -rf ${stderr}
-            echo "Transfer $source to ${host}'s $target is failed. $options "
-            echo "Check the transport error log(escue logs transporterror)"
-            echo "[ `date` scp_file_transfer cluster: $cluster node: $node message: $ERROR]" &>> $TRANSPORTERRORLOGPATH
-         fi
-         echo "$OUTPUT"
-         return 0
-      ;;
-    esac
+    shift 2
+    options="$ssh_options,"$@""
 
+    STDERR=$(mktemp)
+    exec {STDERR_W}>$STDERR
+    exec {STDERR_R}<$STDERR
+    rm $STDERR
+
+    parse_options $options
+    construct_scp_params
+    scp $scp_params >$STDOUT 2>&$STDERR_W
+    [[ $? -ne 0 ]] && error_logs "scp" $STDERR_R && return 1 || return 0
   }
+
+  function error_logs() {
+  # $1 location which raise error from
+  # $2 stderr file descriptor temporally
+  msg="Message: $1 $(cat <&$2)"
+  echo "[ `date` $msg ]" &>> $TRANSPORTERRORLOGPATH
+  }
+
 }
 
