@@ -17,7 +17,14 @@ function parse_params(){
 }
 
 function install_cluster() {
-
+  cluster=$1; shift
+  nodes=($(ls $CLUSTER_DIR/$cluster))
+  InstallFormatter "${nodes[@]}"
+  for node in "${nodes[@]}"; do
+      first_col $node
+      _install $cluster $node "$@"
+      printf "\n"
+  done
 }
 function install_node() {
     node=$2
@@ -28,12 +35,12 @@ function install_node() {
 }
 
 function _install() {
-
   cluster=$1
   node=$2
   file=$3 # install file location
   identity_file=$4
   ssh_options=$5
+
 
 
   nodeloc="$CLUSTER_DIR/$cluster/$node"
