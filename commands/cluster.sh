@@ -8,6 +8,8 @@ unset VERSION
 PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
 source "${PARENT_PATH}/lib/create.sh"
 source "${PARENT_PATH}/lib/install.sh"
+source "${PARENT_PATH}/lib/list.sh"
+
 function usage()
 {
   cat "${PARENT_PATH}/usage/cluster"
@@ -31,13 +33,15 @@ while : ; do
     esac
 done
 
+
+
 CLUSTER="$@"
 
 if [ $VALID_ARGUMENTS != "0" ]; then
   usage
 fi
 
-if [ -z $CLUSTER ]; then
+if [ -z $CLUSTER ] && [ $COMMAND != 'list' ]; then
   usage
 fi
 
@@ -45,10 +49,8 @@ fi
 case $COMMAND in
   create ) create_cluster "${PARENT_PATH}/cluster/" "$CLUSTER" ;;
   install) install_cluster $CLUSTER $FILE $INDENTY_FILE $SSHOPTIONS ;;
-  list   ) get;;
+  list   ) get_cluster_lst ;;
   change)  ;;
   -h|--help) usage ;;
-  *)
-    ;;
-
+  *);;
 esac

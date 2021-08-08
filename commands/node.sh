@@ -7,7 +7,7 @@ unset INDENTY_FILE
 PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
 source "${PARENT_PATH}/lib/create.sh"
 source "${PARENT_PATH}/lib/install.sh"
-
+source "${PARENT_PATH}/lib/list.sh"
 function usage() {
   cat "${PARENT_PATH}/usage/node"
 }
@@ -37,7 +37,7 @@ if [ $VALID_ARGUMENTS != "0" ]; then
   usage
 fi
 
-if [ -z $CLUSTER ]; then
+if [ -z $CLUSTER ] && [ $COMMAND != 'list' ]; then
   # CLUSTER parameter is required
   usage
 fi
@@ -53,6 +53,7 @@ case $COMMAND in
   change)  ;;
   install)
     install_node $CLUSTER $NODE $FILE $INDENTY_FILE $SSHOPTIONS ;;
+  list) get_node_lst $CLUSTER ;;
   -h | --help) usage ;;
   *) usage ;;
 
