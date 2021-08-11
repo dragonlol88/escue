@@ -79,10 +79,9 @@ function create_node()
   configureNodeStatus=$?
   if [ $configureNodeStatus -eq 0 ]; then
     base="${cluster_dir}/${nodename}"
-    mkdir -p "$base/$JVMDIR"
-
+    mkdir -p $base
     yml_file="$base/$YMLFILE"
-    jvm_file="$base/$JVMDIR/$JVMFILE"
+    jvm_file="$base/$JVMFILE"
     server_file="$base/$SEVERFILE"
 
     yml_writer && jvm_writer && server_writer
