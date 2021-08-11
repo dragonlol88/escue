@@ -104,19 +104,19 @@ teardown() {
 
   #Todo 바꾸기 dir 바꾸기
   file="/home/ec2-user/escue/config/question"
-  testlines=("node.roles=Enter node roles:"
-             "path.data=Enter node data path:"
-              "path.logs=Enter node logs path:"
-              "http.host=Enter node host:"
-              "http.port=Enter node http port:"
-              "transport.port=Enter node transport port:"
-              "discovery.seed_hosts=Enter node seed hosts:"
-              "cluster.initial_master_nodes=Enter node initial master nodes:"
-              "server.host=Enter server host:"
-              "server.username=Enter server user name:"
-              "install.path=Enter server install path:"
-              "config.path=Enter config path:"
-              "jvm.heap=Enter heap size:"
+  testlines=("yml_node.roles=Enter node roles:"
+             "yml_path.data=Enter node data path:"
+              "yml_path.logs=Enter node logs path:"
+              "yml_network.host=Enter node host:"
+              "yml_http.port=Enter node http port:"
+              "yml_transport.port=Enter node transport port:"
+              "yml_discovery.seed_hosts=Enter node seed hosts:"
+              "yml_cluster.initial_master_nodes=Enter node initial master nodes:"
+              "sv_server.host=Enter server host:"
+              "sv_server.username=Enter server user name:"
+              "sv_install.path=Enter server install path:"
+              "sv_config.path=Enter config path:"
+              "jvm_jvm.heap=Enter heap size:"
             )
   count=0
   # sed -n '/\[node\]/, /\[.*\]/ p' question | sed -e '/^#\|\[.*\]/ d'
@@ -126,8 +126,8 @@ teardown() {
     fi
     trim=$(echo $line | sed -e 's/\s*$//')
 
-#    echo "${testlines[$count]}"
-#    echo $trim
+    echo "${testlines[$count]}"
+    echo $trim
     [ "$trim" = "${testlines[$count]}" ]
     ((count=count+1))
   done< <(extract_lines "\[node\]" "\[.*\]" -e "^#\|\[.*\]\|^\s*$" $file)
@@ -138,18 +138,18 @@ teardown() {
 
   #Todo 바꾸기 dir 바꾸기
   file="/home/ec2-user/escue/config/question"
-  testlines=("node.roles=Enter node roles:"
-             "path.data=Enter node data path:"
-              "path.logs=Enter node logs path:"
-              "http.host=Enter node host:"
-              "http.port=Enter node http port:"
-              "transport.port=Enter node transport port:"
-              "discovery.seed_hosts=Enter node seed hosts:"
-              "cluster.initial_master_nodes=Enter node initial master nodes:"
-              "server.host=Enter server host:"
-              "server.username=Enter server user name:"
-              "install.path=Enter server install path:"
-              "config.path=Enter config path:"
+  testlines=("yml_node.roles=Enter node roles:"
+             "yml_path.data=Enter node data path:"
+              "yml_path.logs=Enter node logs path:"
+              "yml_network.host=Enter node host:"
+              "yml_http.port=Enter node http port:"
+              "yml_transport.port=Enter node transport port:"
+              "yml_discovery.seed_hosts=Enter node seed hosts:"
+              "yml_cluster.initial_master_nodes=Enter node initial master nodes:"
+              "sv_server.host=Enter server host:"
+              "sv_server.username=Enter server user name:"
+              "sv_install.path=Enter server install path:"
+              "sv_config.path=Enter config path:"
             )
   count=0
 
