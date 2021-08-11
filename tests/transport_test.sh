@@ -21,9 +21,8 @@ setup()
   user=$(whoami)
   identity_file="${testing_dir}/${RSANAME}"
   ssh_options=$5
-  cluster=$6
-  node=$7
-  Transport "$host" "$port" "$user" "$identity_file" "$ssh_options" "$cluster" "$node"
+  Transport "$host" "$user" "$port"  "$identity_file" "$ssh_options"
+
 }
 
 teardown() {
@@ -33,14 +32,11 @@ teardown() {
 }
 
 
-@test "Test Http Request" {
-
-  echo helloworld
-}
-
 @test "Test scp File Transport with identity file" {
   touch testfile
   transport_dir=$(mkdir transport; cd transport || exit 1; pwd)
+  echo $testfile
+  echo $transport_dir
   scp_transport testfile $transport_dir
 
   [ -e "${transport_dir}/testfile" ]
@@ -51,6 +47,7 @@ teardown() {
   touch testfile
   identity_file=""
   transport_dir=$(mkdir transport; cd transport || exit 1; pwd)
+  echo $transport_dir
   scp_transport testfile $transport_dir
   [ -e "${transport_dir}/testfile" ]
 
