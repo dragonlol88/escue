@@ -5,6 +5,7 @@ load test_helper.sh
 setup()
 {
   source ./lib/install.sh
+  source ./lib/create.sh
   source ./lib/utils.sh
   source ./config/globals
   rm -rf testing && mkdir testing
@@ -94,4 +95,37 @@ teardown() {
   ymlfile=$(echo "$node_info" | sed -ne 's/^\[\(.*\)\]$/\1/ p')
   [ $ymlfile = 'elasticsearch.yml' ]
 
+}
+
+@test "Create formatting file Test" {
+  declare -A configs=(["s_hello"]=1 ["s_world"]=2 ["s_escue"]=3 \
+                          ["v_hello"]=1 ["v_world"]=2 ["v_escue"]=3)
+  declare -a pairs
+  _format_file s_
+
+  [ "${pairs[0]}" = "hello: 1" ]
+  [ "${pairs[1]}" = "escue: 3" ]
+  [ "${pairs[2]}" = "world: 2" ]
+}
+
+@test "Create yml  file Test" {
+  declare -A configs=(["s_hello"]=1 ["s_world"]=2 ["s_escue"]=3 \
+                          ["v_hello"]=1 ["v_world"]=2 ["v_escue"]=3)
+  predict_result=( "hello: 1" "escue: 3" "world: 2")
+  yml_file=yml
+  yml_writer
+  result=($(cat $yml_file))
+  for ((i=1;i<="${#result[@]}";++i)); do
+    [ "${predict_result[$i]}" = "${result[$i]}" ]
+  done
+}
+
+@test "Create server file Test" {
+  declare -A configs=(["jvm_hello"]=1 ["sv_world"]=2)
+  predict_result=( "hello: 1" "world: 2")
+  server_file=server
+  server_writer
+  result=$(head -n 1 $server_file)
+  echo "${result}"
+  [ "${result}" = "world: 2" ]
 }
