@@ -9,7 +9,7 @@ yml_path.data=Enter node data path:
 yml_path.logs=Enter node logs path:
 
 # Networking setting
-yml_http.host=Enter node host:
+yml_network.host=Enter node host:
 yml_http.port=Enter node http port:
 yml_transport.port=Enter node transport port:
 
@@ -23,8 +23,7 @@ yml_cluster.initial_master_nodes=Enter node initial master nodes:
 sv_server.host=Enter server host:
 sv_server.username=Enter server user name:
 sv_install.path=Enter server install path:
+sv_config.path=Enter config path:
 
-
-config.path=Enter config path:
 jvm_jvm.heap=Enter heap size:
 

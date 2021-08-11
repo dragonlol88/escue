@@ -1,36 +1,35 @@
 #! /bin/bash
-
 ROOTPATH="$(pwd)"
 CLUSTER_DIR="$(pwd)/cluster"
-QUSTION_PATH="$(pwd)/$0/question"
-
-
-questionPath='/home/ec2-user/escue/config/question'
-clusterName="cluster.name"
-nodeName="node.name"
-HTTPHost="network.host"
-HTTPPort="http.port"
-nodeRoles="node.roles"
-dataPath="path.data"
-logsPath="path.logs"
-configPath="config.path"
-installPath="install.path"
-seedHosts="discovery.seed_hosts"
-initialMasterNodes="cluster.initial_master_nodes"
-serverUserName="server.username"
-serverHost="server.host"
-jvmHeap="jvm.heap"
-
+QUSTION_PATH="$(pwd)/config/question"
 LOGDIR="${ROOTPATH}/logs"
 TRANSPORTERRORLOGPATH="${LOGDIR}/transport_error.log"
 TRANSPORTLOGPATH="${LOGDIR}/transport.log"
-
-
 YMLFILE='elasticsearch.yml'
 JVMDIR='jvm.options.d'
 JVMFILE='jvm.options'
 SEVERFILE='server'
+questionPath='/home/ec2-user/escue/config/question'
 
+# elasticsearch.yml
+cluster_name="cluster.name"
+node_name="node.name"
+http_host="network.host"
+http_port="http.port"
+node_roles="node.roles"
+data_path="path.data"
+logs_path="path.logs"
+seed_hosts="discovery.seed_hosts"
+initial_master_nodes="cluster.initial_master_nodes"
+
+# server
+config_path="config.path"
+install_path="install.path"
+server_user_name="server.username"
+server_host="server.host"
+
+# jvm
+jvm_heap="jvm.heap"
 
 
 
