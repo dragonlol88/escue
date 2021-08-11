@@ -13,7 +13,7 @@ parse_options() {
 Transport()
 {
 
-  [[ -z $1 ]] && declare -r host=$1 || return 1
+  declare -r host=$1
   declare -r user=$2
   declare -r port=$3
   declare -r identity_file=$4
