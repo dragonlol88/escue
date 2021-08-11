@@ -5,7 +5,7 @@ source "./config/globals"
 
 parse_options() {
   # trim 양쪽 space
-  options=$(echo $1 | sed -n -e 's/^\s*// p' | sed -n -e 's/\s*$//p')
+  options=$(echo $1 | sed -n -e 's/^\s*// p' | sed -n -e 's/\s*$// p')
   [[ "$options" != ',' ]] && options="-o $(echo $options | sed -n -e 's/,/ -o /g p')" || options=''
 }
 
@@ -67,29 +67,31 @@ Transport()
 
     command=$1 # requirement parameter
     shift
-    _set_stdout
+
     _set_stderr
+    _set_stdout
     _construct_ssh_params "$@"
-    ssh $ssh_params >$STDOUT_W 2>&$STDERR_W
+    ssh $ssh_params >&$STDOUT_W 2>&$STDERR_W
     [[ $? -ne 0  ]] && _log_error "ssh" $STDERR_R && return 1 || return 0
   }
 
   function scp_transport()
   {
-    source=$1
-    target=$2
+    local source=$1
+    local target=$2
     shift 2
-    _set_stdout
+
     _set_stderr
+    _set_stdout
     _construct_scp_params "$@"
-    scp $scp_params >$STDOUT_W 2>&$STDERR_W
+    scp $scp_params >&$STDOUT_W 2>&$STDERR_W
     [[ $? -ne 0 ]] && _log_error "scp" $STDERR_R && return 1 || return 0
   }
 
   function _log_error() {
   # $1 location which raise error from
   # $2 stderr file descriptor temporally
-  msg="Message: $1 $(cat <&$2)"
+  msg="From: $1  Message: $(cat <&$2)"
   echo "[ `date` $msg ]" &>> $TRANSPORTERRORLOGPATH
   }
 
