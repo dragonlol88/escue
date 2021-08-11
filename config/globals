@@ -12,24 +12,24 @@ SEVERFILE='server'
 questionPath='/home/ec2-user/escue/config/question'
 
 # elasticsearch.yml
-cluster_name="cluster.name"
-node_name="node.name"
-http_host="network.host"
-http_port="http.port"
-node_roles="node.roles"
-data_path="path.data"
-logs_path="path.logs"
-seed_hosts="discovery.seed_hosts"
-initial_master_nodes="cluster.initial_master_nodes"
+cluster_name_key="cluster.name"
+node_name_key="node.name"
+http_host_key="network.host"
+http_port_key="http.port"
+node_roles_key="node.roles"
+data_path_key="path.data"
+logs_path_key="path.logs"
+seed_hosts_key="discovery.seed_hosts"
+initial_master_nodes_key="cluster.initial_master_nodes"
 
 # server
-config_path="config.path"
-install_path="install.path"
-server_user_name="server.username"
-server_host="server.host"
+config_path_key="config.path"
+install_path_key="install.path"
+server_user_name_key="server.username"
+server_host_key="server.host"
 
 # jvm
-jvm_heap="jvm.heap"
+jvm_heap_key="jvm.heap"
 
 
 
