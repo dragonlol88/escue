@@ -5,26 +5,6 @@ source "./lib/utils.sh"
 source "./lib/transport.sh"
 source "./lib/formatter.sh"
 
-function parse_params(){
-  user=$(get_param $server_user_name_key "=" $1)
-  host=$(get_param $server_host_key "=" $1)
-  install_path=$(get_param $install_path_key "=" $1)
-  port=$(get_param $http_port_key ":" $2)
-  data_path=$(get_param $data_path_key ":" $2)
-  logs_path=$(get_param $logs_path_key ":" $2)
-  transport_params=($host $user $port $identity_file $ssh_options)
-  if [ -f "$BASE/$ESPATH" ]; then
-    es_path=$(cat "$BASE/$ESPATH")
-  fi
-
-}
-
-function load_files() {
-  BASE="$CLUSTER_DIR/$cluster/$node"
-  sever_file="$BASE/$SEVERFILE"
-  jvm_file="$BASE/$JVMFILE"
-  yml_file="$BASE/$YMLFILE"
-}
 
 function install_cluster() {
   cluster=$1; shift
@@ -118,10 +98,10 @@ function _restart_per_node() {
   declare -r node=$2
   declare -r identity_file=$3
   declare -r ssh_options=$4
+
   load_files
   parse_params $sever_file $yml_file
   Transport "${transport_params[@]}"
-
 
   function kill_process() {
     ssh_command "[[ -d $es_path ]] && cd $es_path; cat pid"
