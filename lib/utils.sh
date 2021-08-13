@@ -116,3 +116,24 @@ function get_param ()
   echo $(sed -n '/'"$1"'/ p' $3 | cut -d${2} -f 2 )
 }
 
+
+function parse_params(){
+  user=$(get_param $server_user_name_key "=" $1)
+  host=$(get_param $server_host_key "=" $1)
+  install_path=$(get_param $install_path_key "=" $1)
+  port=$(get_param $http_port_key ":" $2)
+  data_path=$(get_param $data_path_key ":" $2)
+  logs_path=$(get_param $logs_path_key ":" $2)
+  transport_params=($host $user $port $identity_file $ssh_options)
+  if [ -f "$BASE/$ESPATH" ]; then
+    es_path=$(cat "$BASE/$ESPATH")
+  fi
+
+}
+
+function load_files() {
+  BASE="$CLUSTER_DIR/$cluster/$node"
+  sever_file="$BASE/$SEVERFILE"
+  jvm_file="$BASE/$JVMFILE"
+  yml_file="$BASE/$YMLFILE"
+}
