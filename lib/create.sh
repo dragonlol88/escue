@@ -96,6 +96,10 @@ function _format_file() {
 
     if [[ -n $(echo $key | grep $prefix.\\+$) ]]; then
       nky=${key/$prefix/}
+      [[ $nky = $node_roles_key ]] || \
+      [[ $nky = $seed_hosts_key ]] || \
+      [[ $nky = $initial_master_nodes_key ]]  && \
+      pairs+=("${nky}: [${configs[${key}]}]") && continue
       pairs+=("${nky}: ${configs[${key}]}")
     fi
   done
