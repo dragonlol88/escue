@@ -61,28 +61,29 @@ function _install_per_node() {
   function _decompress() {
     ssh_command "cd $install_path ; tar -xvf ${source##*/} | sed -ne '1p'"  && \
     check_sucess $TRANSMIT_HEADER && return 0 || \
-    check_fail $TRANSMIT_HEADER && return 1
+    check_fail $TRANSMIT_HEADER && return 2
   }
 
   function _configure() {
-    es_path=$(cat <&$STDOUT_R)
-    config_path="${install_path}/${es_path}config"
+    es_path="${install_path}/$(cat <&$STDOUT_R)"
+    config_path="${es_path}config"
     scp_transport $yml_file "${config_path}/$YMLFILE" && \
     scp_transport $jvm_file "${config_path}/$JVMDIR/$JVMILE" && \
     ssh_command "sudo [ ! -d  $data_path ] && sudo mkdir -p $data_path ; sudo chown -R $user $data_path" && \
     ssh_command "sudo [ ! -d  $logs_path ] && sudo mkdir -p $logs_path ; sudo chown -R $user $logs_path" && \
     check_sucess $CONFIGURATION_HEADER && return 0 || \
-    check_fail $TRANSMIT_HEADER && return 1
+    check_fail $TRANSMIT_HEADER && return 3
   }
 
   function _install_es() {
-    ssh_command "cd ${install_path}/${es_path}; bin/elasticsearch -d -p pid | exit" && \
+    ssh_command "sudo -b su; ulimit -n 65535; ulimit -l unlimited; sudo sysctl -w vm.max_map_count=262144" &&
+    ssh_command "cd ${es_path}; bin/elasticsearch -d -p pid | exit" && \
     check_sucess $INSTALL_HEADER && return 0 || \
-    check_fail $INSTALL_HEADER && return 1
+    check_fail $INSTALL_HEADER && return 4
   }
-  _transmit && _decompress && _configure && _install_es && return 0 || return 1
-}
 
-install_plugins() {
-  echo "Install plugins"
+  function recover() {
+    ssh_command "rm -rf $install_path; sudo rm -rf $logs_path; sudo rm -rf $data_path"
+  }
+  _transmit && _decompress && _configure && _install_es || recover
 }
