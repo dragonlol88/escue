@@ -12,8 +12,19 @@ function parse_params(){
   port=$(get_param $http_port_key ":" $2)
   data_path=$(get_param $data_path_key ":" $2)
   logs_path=$(get_param $logs_path_key ":" $2)
+  transport_params=($host $user $port $identity_file $ssh_options)
+  if [ -f "$BASE/$ESPATH" ]; then
+    es_path=$(cat "$BASE/$ESPATH")
+  fi
+
 }
 
+function load_files() {
+  BASE="$CLUSTER_DIR/$cluster/$node"
+  sever_file="$BASE/$SEVERFILE"
+  jvm_file="$BASE/$JVMFILE"
+  yml_file="$BASE/$YMLFILE"
+}
 
 function install_cluster() {
   cluster=$1; shift
@@ -34,6 +45,7 @@ function install_node() {
     printf "\n"
 }
 
+
 function _install_per_node() {
   declare -r cluster=$1
   declare -r node=$2
@@ -42,13 +54,8 @@ function _install_per_node() {
   declare -r ssh_options=$5
   declare -a transport_params
 
-  BASE="$CLUSTER_DIR/$cluster/$node"
-  sever_file="$BASE/$SEVERFILE"
-  jvm_file="$BASE/$JVMFILE"
-  yml_file="$BASE/$YMLFILE"
-
+  load_files
   parse_params $sever_file $yml_file
-  transport_params=($host $user $port $identity_file $ssh_options)
   Transport "${transport_params[@]}"
 
   function _transmit() {
@@ -65,8 +72,10 @@ function _install_per_node() {
   }
 
   function _configure() {
-    es_path="${install_path}/$(cat <&$STDOUT_R)"
-    config_path="${es_path}config"
+    es_dir=$(cat <&$STDOUT_R | sed -n -e 's/\/// p')
+    es_path="$install_path/$es_dir"
+    echo $es_path > "$BASE/$ESPATH"
+    config_path="$es_path/config"
     ssh_command "sudo -b su; ulimit -n 65535; ulimit -l unlimited; sudo sysctl -w vm.max_map_count=262144" && \
     scp_transport $yml_file "${config_path}/$YMLFILE" && \
     scp_transport $jvm_file "${config_path}/$JVMDIR/$JVMILE" && \
@@ -87,4 +96,44 @@ function _install_per_node() {
     ssh_command "rm -rf $install_path; sudo rm -rf $logs_path; sudo rm -rf $data_path"
   }
   _transmit && _decompress && _configure && _install_es || recover
+}
+
+
+function restart_cluster() {
+  cluster=$1; shift
+  nodes=($(ls $CLUSTER_DIR/$cluster))
+  for node in "${nodes[@]}"; do
+      _restart_per_node $cluster $node "$@"
+  done
+}
+
+function restart_node() {
+    _install_per_node "$@"
+}
+
+function _restart_per_node() {
+
+
+  declare -r cluster=$1
+  declare -r node=$2
+  declare -r identity_file=$3
+  declare -r ssh_options=$4
+  load_files
+  parse_params $sever_file $yml_file
+  Transport "${transport_params[@]}"
+
+
+  function kill_process() {
+    ssh_command "[[ -d $es_path ]] && cd $es_path; cat pid"
+    pid=$(cat <&$STDOUT_R)
+    ssh_command "kill -9 $pid"
+  }
+
+  function restart() {
+    ssh_command "cd ${es_path}; bin/elasticsearch -d -p pid | exit"
+  }
+
+  kill_process && restart && echo "Restart $node success." && return 0 || \
+  echo "Restart $node failed. Check node status" && return 1
+
 }
