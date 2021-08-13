@@ -67,6 +67,7 @@ function _install_per_node() {
   function _configure() {
     es_path="${install_path}/$(cat <&$STDOUT_R)"
     config_path="${es_path}config"
+    ssh_command "sudo -b su; ulimit -n 65535; ulimit -l unlimited; sudo sysctl -w vm.max_map_count=262144" && \
     scp_transport $yml_file "${config_path}/$YMLFILE" && \
     scp_transport $jvm_file "${config_path}/$JVMDIR/$JVMILE" && \
     ssh_command "sudo [ ! -d  $data_path ] && sudo mkdir -p $data_path ; sudo chown -R $user $data_path" && \
@@ -76,7 +77,7 @@ function _install_per_node() {
   }
 
   function _install_es() {
-    ssh_command "sudo -b su; ulimit -n 65535; ulimit -l unlimited; sudo sysctl -w vm.max_map_count=262144" &&
+
     ssh_command "cd ${es_path}; bin/elasticsearch -d -p pid | exit" && \
     check_sucess $INSTALL_HEADER && return 0 || \
     check_fail $INSTALL_HEADER && return 4
