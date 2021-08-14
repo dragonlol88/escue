@@ -124,11 +124,11 @@ function parse_params(){
   port=$(get_param $http_port_key ":" $2)
   data_path=$(get_param $data_path_key ":" $2)
   logs_path=$(get_param $logs_path_key ":" $2)
+
   transport_params=($host $user $port $identity_file $ssh_options)
   if [ -f "$BASE/$ESPATH" ]; then
     es_path=$(cat "$BASE/$ESPATH")
   fi
-
 }
 
 function load_files() {
