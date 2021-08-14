@@ -56,6 +56,8 @@ function _install_per_node() {
     es_path="$install_path/$es_dir"
     echo $es_path > "$BASE/$ESPATH"
     config_path="$es_path/config"
+
+    ssh_command "mkdir -p $config_path/analysis" && \
     ssh_command "sudo -b su; ulimit -n 65535; ulimit -l unlimited; sudo sysctl -w vm.max_map_count=262144" && \
     scp_transport $yml_file "${config_path}/$YMLFILE" && \
     scp_transport $jvm_file "${config_path}/$JVMDIR/$JVMILE" && \
@@ -92,7 +94,6 @@ function restart_node() {
 }
 
 function _restart_per_node() {
-
 
   declare -r cluster=$1
   declare -r node=$2
