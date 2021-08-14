@@ -4,15 +4,14 @@ unset COMMAND
 unset CLUSTER
 unset VERSION
 
-
-PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
-source "${PARENT_PATH}/lib/create.sh"
-source "${PARENT_PATH}/lib/install.sh"
-source "${PARENT_PATH}/lib/list.sh"
+source "./lib/create.sh"
+source "./lib/install.sh"
+source "./lib/list.sh"
 
 function usage()
 {
   cat "${PARENT_PATH}/usage/cluster"
+  exit 1
 }
 
 COMMAND=$1; shift
@@ -37,19 +36,14 @@ done
 
 CLUSTER="$@"
 
-if [ $VALID_ARGUMENTS != "0" ]; then
-  usage
-fi
-
-if [ -z $CLUSTER ] && [ $COMMAND != 'list' ]; then
-  usage
-fi
-
+[[ $VALID_ARGUMENTS != "0" ]] && usage
+[[ -z $CLUSTER ]] && [[ $COMMAND != 'list' ]] && usage
 
 case $COMMAND in
-  create ) create_cluster "${PARENT_PATH}/cluster/" "$CLUSTER" ;;
-  install) install_cluster $CLUSTER $FILE $INDENTY_FILE $SSHOPTIONS ;;
-  list   ) get_cluster_lst ;;
+  create  ) create_cluster "${PARENT_PATH}/cluster/" "$CLUSTER" ;;
+  install ) install_cluster $CLUSTER $FILE $INDENTY_FILE $SSHOPTIONS ;;
+  restart ) restart_cluster $CLUSTER $INDENTY_FILE $SSHOPTIONS;;
+  list    ) get_cluster_lst ;;
   change)  ;;
   -h|--help) usage ;;
   *);;

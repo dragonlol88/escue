@@ -4,19 +4,20 @@ unset COMMAND
 unset CLUSTER
 unset FILE
 unset INDENTY_FILE
-PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
-source "${PARENT_PATH}/lib/create.sh"
-source "${PARENT_PATH}/lib/install.sh"
-source "${PARENT_PATH}/lib/list.sh"
+
+source "./lib/create.sh"
+source "./lib/install.sh"
+source "./lib/list.sh"
+source "./config/globals"
+
 function usage() {
-  cat "${PARENT_PATH}/usage/node"
+  cat "./usage/node"
+  exit 1
 }
 
 COMMAND=$1; shift
-
 PARSED_ARGUMENTS=$(getopt -a -n "escue node" -o o:i:f:c: --long cluster:,file: -- "$@")
 VALID_ARGUMENTS=$?
-
 eval set -- "$PARSED_ARGUMENTS"
 
 while : ; do
@@ -33,26 +34,17 @@ while : ; do
 done
 
 
-if [ $VALID_ARGUMENTS != "0" ]; then
-  usage
-fi
-
-if [ -z $CLUSTER ] && [ $COMMAND != 'list' ]; then
-  # CLUSTER parameter is required
-  usage
-fi
-
-if [ $COMMAND = 'install' ] && [ -z $FILE ]; then
-  usage
-fi
-
 NODE="$@"
 
+[[ $VALID_ARGUMENTS != "0" ]] && usage
+[[ -z $CLUSTER ]] && [[ $COMMAND != 'list' ]] && usage   # CLUSTER parameter is required
+[[ $COMMAND = 'install' ]] && [[ -z $FILE ]] && usage
+
 case $COMMAND in
-  create)  create_node $CLUSTER $NODE  ;;
-  change)  ;;
-  install)
-    install_node $CLUSTER $NODE $FILE $INDENTY_FILE $SSHOPTIONS ;;
+  create  )  create_node $CLUSTER $NODE  ;;
+  change  )  ;;
+  install ) install_node $CLUSTER $NODE $FILE "$INDENTY_FILE" "$SSHOPTIONS" ;;
+  restart ) restart_node $CLUSTER $NODE "$INDENTY_FILE" "$SSHOPTIONS";;
   list) get_node_lst $CLUSTER ;;
   -h | --help) usage ;;
   *) usage ;;
