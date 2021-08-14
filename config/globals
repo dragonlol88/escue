@@ -10,6 +10,7 @@ JVMDIR='jvm.options.d'
 JVMFILE='jvm.options'
 SEVERFILE='server'
 questionPath='/home/ec2-user/escue/config/question'
+ESPATH="es_path"
 
 # elasticsearch.yml
 cluster_name_key="cluster.name"
@@ -30,6 +31,7 @@ server_host_key="server.host"
 
 # jvm
 jvm_heap_key="jvm.heap"
+
 
 
 
