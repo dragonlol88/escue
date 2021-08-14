@@ -133,7 +133,7 @@ function parse_params(){
 
 function load_files() {
   BASE="$CLUSTER_DIR/$cluster/$node"
-  sever_file="$BASE/$SEVERFILE"
+  server_file="$BASE/$SEVERFILE"
   jvm_file="$BASE/$JVMFILE"
   yml_file="$BASE/$YMLFILE"
 }

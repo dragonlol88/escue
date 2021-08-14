@@ -23,7 +23,7 @@ function _remove_per_node() {
   declare -a transport_params
 
   load_files
-  parse_params $sever_file $yml_file
+  parse_params $server_file $yml_file
   Transport "${transport_params[@]}"
 
   function kill_process() {

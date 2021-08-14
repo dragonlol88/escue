@@ -36,7 +36,7 @@ function sync_yml {
   declare -a transport_params
 
   load_files
-  parse_params $sever_file $yml_file
+  parse_params $server_file $yml_file
   check_espath || return 1
   Transport "${transport_params[@]}"
 
@@ -54,7 +54,7 @@ function sync_jvm {
   declare -a transport_params
 
   load_files
-  parse_params $sever_file $yml_file
+  parse_params $server_file $yml_file
   check_espath || return 1
   Transport "${transport_params[@]}"
 
@@ -84,7 +84,7 @@ function _sync_ana_per_node {
   declare -a transport_params
 
   load_files
-  parse_params $sever_file $yml_file
+  parse_params $server_file $yml_file
   check_espath || return 1
   Transport "${transport_params[@]}"
 

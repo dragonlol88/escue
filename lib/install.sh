@@ -35,7 +35,7 @@ function _install_per_node() {
   declare -a transport_params
 
   load_files
-  parse_params $sever_file $yml_file
+  parse_params $server_file $yml_file
   Transport "${transport_params[@]}"
 
   function _transmit() {
@@ -95,13 +95,14 @@ function restart_node() {
 
 function _restart_per_node() {
 
+
   declare -r cluster=$1
   declare -r node=$2
   declare -r identity_file=$3
   declare -r ssh_options=$4
 
   load_files
-  parse_params $sever_file $yml_file
+  parse_params $server_file $yml_file
   Transport "${transport_params[@]}"
 
   function kill_process() {
