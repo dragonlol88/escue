@@ -44,6 +44,7 @@ case $COMMAND in
   create  )  create_node $CLUSTER $NODE  ;;
   change  )  ;;
   install ) install_node $CLUSTER $NODE $FILE "$INDENTY_FILE" "$SSHOPTIONS" ;;
+  remove  ) remove_node  $CLUSTER $NODE "$INDENTY_FILE" "$SSHOPTIONS" ;;
   restart ) restart_node $CLUSTER $NODE "$INDENTY_FILE" "$SSHOPTIONS";;
   list) get_node_lst $CLUSTER ;;
   -h | --help) usage ;;

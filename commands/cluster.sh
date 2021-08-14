@@ -7,6 +7,7 @@ unset VERSION
 source "./lib/create.sh"
 source "./lib/install.sh"
 source "./lib/list.sh"
+source "./lib/remove.sh"
 
 function usage()
 {
@@ -41,8 +42,9 @@ CLUSTER="$@"
 
 case $COMMAND in
   create  ) create_cluster "${PARENT_PATH}/cluster/" "$CLUSTER" ;;
-  install ) install_cluster $CLUSTER $FILE $INDENTY_FILE $SSHOPTIONS ;;
-  restart ) restart_cluster $CLUSTER $INDENTY_FILE $SSHOPTIONS;;
+  install ) install_cluster $CLUSTER $FILE "$INDENTY_FILE" "$SSHOPTIONS" ;;
+  restart ) restart_cluster $CLUSTER "$INDENTY_FILE" "$SSHOPTIONS";;
+  remove  ) remove_cluster $CLUSTER "$INDENTY_FILE" "$SSHOPTIONS";;
   list    ) get_cluster_lst ;;
   change)  ;;
   -h|--help) usage ;;
