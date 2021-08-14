@@ -8,13 +8,13 @@ INSTALL_HEADER="Install"
 INSTALL_HEADERS=("Node Name" "Transmit" "Decompress" "Configuration" "Install")
 
 
+
 InstallFormatter(){
 
-
+  declare -a NODES="$@"
   CENTER_LOC=''
   MAX_LEN=''
   INDENT=4
-  NODES="$@"
   count=0
 
   function get_center() {
@@ -41,19 +41,20 @@ InstallFormatter(){
   function first_col(){
     col=$1
     col_len=${#col}
-    printf "%$((CENTER_LOC-col_len/2))s"
-    printf "%-$((col_len/2 + MAX_LEN/2 + INDENT))s" "$col"
+    printf "%$((CENTER_LOC-(col_len)/2))s"
+    printf "%-$(((col_len1+1)/2 + (MAX_LEN+1)/2 + INDENT))s" "$col"
   }
 
   function check_fail() {
     col_len=${#1}
-    printf "%+$((col_len/2))s" x
+    printf "%+$(((col_len+1)/2))s" x
+
   }
 
   function check_sucess() {
     col_len=${#1}
-    printf "%+$((col_len/2))s" v
-    printf "%+$((col_len/2 + INDENT))s"
+    printf "%+$(((col_len+1)/2))s" v
+    printf "%+$(((col_len+1)/2 + INDENT))s"
 
   }
 
@@ -71,6 +72,5 @@ InstallFormatter(){
 
   done
   printf "\n"
-
-
 }
+
