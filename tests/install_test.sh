@@ -98,14 +98,13 @@ teardown() {
 }
 
 @test "Create formatting file Test" {
-  declare -A configs=(["s_hello"]=1 ["s_world"]=2 ["s_escue"]=3 \
+  declare -A configs=(["s_http.port"]=1 ["s_network.host"]=2 ["s_discovery.seed_hosts"]=3 \
                           ["v_hello"]=1 ["v_world"]=2 ["v_escue"]=3)
   declare -a pairs
   _format_file s_
-
-  [ "${pairs[0]}" = "hello: 1" ]
-  [ "${pairs[1]}" = "escue: 3" ]
-  [ "${pairs[2]}" = "world: 2" ]
+  [ "${pairs[1]}" = "http.port: 1" ]
+  [ "${pairs[0]}" = "discovery.seed_hosts: [3]" ]
+  [ "${pairs[2]}" = "network.host: 2" ]
 }
 
 @test "Create yml  file Test" {
