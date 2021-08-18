@@ -46,7 +46,6 @@ case $COMMAND in
   restart ) restart_cluster $CLUSTER "$INDENTY_FILE" "$SSHOPTIONS";;
   remove  ) remove_cluster $CLUSTER "$INDENTY_FILE" "$SSHOPTIONS";;
   list    ) get_cluster_lst ;;
-  change)  ;;
   -h|--help) usage ;;
   *);;
 esac
