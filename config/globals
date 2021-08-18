@@ -1,4 +1,5 @@
 #! /bin/bash
+
 ROOTPATH="$(pwd)"
 CLUSTER_DIR="$(pwd)/cluster"
 QUSTION_PATH="$(pwd)/config/question"
@@ -11,6 +12,7 @@ JVMFILE='jvm.options'
 SEVERFILE='server'
 questionPath='/home/ec2-user/escue/config/question'
 ESPATH="es_path"
+PLUGINPATH='es_plugin'
 
 # elasticsearch.yml
 cluster_name_key="cluster.name"
