@@ -45,7 +45,7 @@ NODE="$@"
 
 case $COMMAND in
   create  ) create_node   $CLUSTER $NODE  ;;
-  change  ) change_config $CLUSTER $NODE $CONFIG;;
+  mod  ) change_config $CLUSTER $NODE $CONFIG;;
   install ) install_node  $CLUSTER $NODE $FILE "$INDENTY_FILE" "$SSHOPTIONS" ;;
   remove  ) remove_node   $CLUSTER $NODE "$INDENTY_FILE" "$SSHOPTIONS" ;;
   restart ) restart_node  $CLUSTER $NODE "$INDENTY_FILE" "$SSHOPTIONS";;
