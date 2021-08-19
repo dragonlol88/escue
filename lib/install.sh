@@ -118,7 +118,77 @@ function _restart_per_node() {
     ssh_command "cd ${es_path}; bin/elasticsearch -d -p pid | exit"
   }
 
-  kill_process && restart && echo "Restart $node success." && return 0 || \
-  echo "Restart $node failed. Check node status" && return 1
+  kill_process && restart && echo "${node}: Restart success." && return 0 || \
+  echo "${node}: Restart failed. Check node status" && return 1
 
+}
+
+
+function install_plugins() {
+  cluster=$1; shift
+  nodes=($(ls $CLUSTER_DIR/$cluster))
+  for node in "${nodes[@]}"; do
+      _install_plugin_per_node $cluster $node "$@"
+  done
+}
+
+function fill_plugin_list_to_file() {
+  declare -a plugin_lst=$1
+  local IFS=$'\n'
+  echo "${plugin_lst[*]}" > $BASE/$PLUGINPATH
+}
+
+function _install_plugin_per_node() {
+  declare -r cluster=$1
+  declare -r node=$2
+  declare -r source=$3
+  declare -r identity_file=$4
+  declare -r ssh_options=$5
+  declare -r plugin_type=$6
+  declare plugin_path
+  declare file_name
+  declare -a transport_params
+
+  load_files
+  parse_params $server_file $yml_file
+  check_espath || return 1
+  Transport "${transport_params[@]}"
+  file_name=${source##*/}
+  plugin_path="$es_path/$PLUGINPATH"
+
+  function _store_plugin_lst() {
+      ssh_command "cd $es_path/plugins; ls" && \
+      cat <&$STDOUT_R > $BASE/$PLUGINPATH
+  }
+
+  function _install_plugin_from_file() {
+    ssh_command "[[ ! -d $plugin_path ]] && mkdir -p $plugin_path" && \
+    scp_transport $source $plugin_path && \
+    ssh_command "cd $es_path; bin/elasticsearch-plugin install file://$plugin_path/$file_name"
+  }
+
+  function _install_core_and_url_plugin() {
+    ssh_command "cd $es_path; bin/elasticsearch-plugin install $source"
+  }
+
+  function _message() {
+    declare -r node=$2
+    declare -r file=$3
+    status=$1
+    if [ $status -eq 0 ]; then
+      printf "%s\n" "${node}: Install $file is success."
+    else
+      printf "%s\n"  "${node}: Install $file is failed." "check transport logs.(escue check transport-logs)"
+    fi
+  }
+
+  if [ $plugin_type = 'file' ]; then
+      _install_plugin_from_file && _store_plugin_lst
+      _message $? $node $file_name
+  elif [ $plugin_type = 'core' ] || [ $plugin_type = 'url' ]; then
+    _install_core_and_url_plugin && _store_plugin_lst
+    _message $? $node $file_name
+  else
+    echo "escue plugin install does not support $plugin_type type."
+  fi
 }
