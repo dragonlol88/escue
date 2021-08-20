@@ -15,7 +15,7 @@ PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
 source "${PARENT_PATH}/lib/sync.sh"
 
 function usage() {
-  cat "${PARENT_PATH}/usage/sync"
+  cat "${PARENT_PATH}/docs/sync"
   exit 1
 }
 
@@ -46,7 +46,7 @@ CLUSTER="$@"
 
 [[ $COMMAND = 'yml' ]] || [[ $COMMAND = 'jvm' ]] && [[ -z $NODE ]] && usage
 [[ $COMMAND = 'yml' ]] || [[ $COMMAND = 'jvm' ]] && [[ -n $TARGET ]] && usage
-[[ $COMMAND = 'yml' ]] || [[ $COMMAND = 'jvm' ]] && [[ -n $FILE ]] && usage
+[[ $COMMAND = 'yml' ]] || [[ $COMMAND = 'jvm' ]] && [[ -n $SOURCE ]] && usage
 [[ $COMMAND = 'ana' ]] && [[ -n $NODE ]] && usage
 
 case $COMMAND in
