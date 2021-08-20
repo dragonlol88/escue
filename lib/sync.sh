@@ -4,18 +4,10 @@ source "./config/globals"
 source "./lib/utils.sh"
 source "./lib/transport.sh"
 
-
 function _sync() {
   declare -r source=$1
   declare -r target=$2
   scp_transport $source $target
-}
-
-function check_espath() {
-  if [[ -z $es_path ]]; then
-    echo -e "elasticsearch search file does not exit.\ncheck `es_path` file(escue check -f es_path [nodename]"
-    return 1
-  fi
 }
 
 function message() {
@@ -23,9 +15,9 @@ function message() {
     declare -r file=$3
     status=$1
     if [ $status -eq 0 ]; then
-      printf "%s\n" "$node's $file synchronization is success."
+      printf "%s\n" "${node}: $file synchronization  is success."
     else
-      printf "%s\n"  "$file's synchronization to $node is failed." "check transport logs.(escue check transport-logs)"
+      printf "%s\n"  "${node}: $file synchronization is failed." "check transport logs.(escue check transport-logs)"
     fi
 }
 
@@ -69,6 +61,7 @@ function sync_ana() {
       _sync_ana_per_node $cluster $node "$@"
   done
 }
+
 
 function sync_ana_per_node() {
     _sync_ana_per_node "$@"
