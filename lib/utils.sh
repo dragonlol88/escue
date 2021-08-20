@@ -137,3 +137,10 @@ function load_files() {
   jvm_file="$BASE/$JVMFILE"
   yml_file="$BASE/$YMLFILE"
 }
+
+function check_espath() {
+  if [[ -z $es_path ]]; then
+    echo -e "elasticsearch search file does not exit.\ncheck `es_path` file(escue check -f es_path [nodename]"
+    return 1
+  fi
+}

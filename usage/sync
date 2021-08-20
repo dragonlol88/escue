@@ -1,0 +1,33 @@
+Synchronize files related with elasticsearch across cluster
+
+Stop word         : analysis
+Synonyms          : analysis
+elasticsearch.yml : elasticsearch configure
+jvm.options       : elasticsearch configure
+     .
+     .
+     .
+     .
+
+Usage: escue sync-file [COMMAND] [OPTIONS] CLUSTER
+
+Options:
+    -f  | --file   )   string  Install file location
+                               Required when ana command
+    -i  |          )   string  identity file for connecting to remote server
+    -n  | --node   )   string  node name
+                               If no node is specified, file will be synchronized to all nodes.
+                               Required if command is jvm or yml
+    -t  | --target )   string  Location to be synchronized
+                               If no target is specified, file will be synchronized to configs/analysis(default directory).
+                               must not be specified with jvm and yml command
+    -o  |          )   string  ssh or scp options
+
+Commands:
+    jvm      Synchronize jvm.options configure file
+             ex - escue sync-file jvm -i [identity file] -n [node name] [cluster name]
+    yml      Synchronize elasticsearch.yml configure file
+             ex - escue sync-file yml -i [identity file] -n [node name] [cluster name]
+    ana      Synchronize files related with analysis
+             ex - escue sync-file ana -f [file] -t [target directory] -i [identity file] [cluster name]
+    plugin   Synchronize plugins
