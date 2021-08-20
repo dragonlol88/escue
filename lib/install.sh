@@ -5,7 +5,6 @@ source "./lib/utils.sh"
 source "./lib/transport.sh"
 source "./lib/formatter.sh"
 
-
 function install_cluster() {
   cluster=$1; shift
   nodes=($(ls $CLUSTER_DIR/$cluster))
@@ -93,7 +92,7 @@ function restart_cluster() {
 }
 
 function restart_node() {
-    _install_per_node "$@"
+    _restart_per_node "$@"
 }
 
 function _restart_per_node() {
@@ -110,8 +109,10 @@ function _restart_per_node() {
 
   function kill_process() {
     ssh_command "[[ -d $es_path ]] && cd $es_path; cat pid"
+    status=$?
     pid=$(cat <&$STDOUT_R)
-    ssh_command "kill -9 $pid"
+    [[ $status -eq 0 ]] && [[ -n $pid ]] && ssh_command "kill -9 $pid"
+    return 0
   }
 
   function restart() {
@@ -157,6 +158,15 @@ function _install_plugin_per_node() {
   file_name=${source##*/}
   plugin_path="$es_path/$PLUGINPATH"
 
+  function _check_plugin() {
+    ssh_command "cd $es_path/plugins; ls" &&\
+    if_exist=$(cat <&$STDOUT_R | grep $file_name)
+    if [ -n "$if_exist" ]; then
+       ssh_command "cd $es_path; bin/elasticsearch-plugin remove $source"
+    fi
+
+  }
+
   function _store_plugin_lst() {
       ssh_command "cd $es_path/plugins; ls" && \
       cat <&$STDOUT_R > $BASE/$PLUGINPATH
@@ -182,7 +192,7 @@ function _install_plugin_per_node() {
       printf "%s\n"  "${node}: Install $file is failed." "check transport logs.(escue check transport-logs)"
     fi
   }
-
+  _check_plugin
   if [ $plugin_type = 'file' ]; then
       _install_plugin_from_file && _store_plugin_lst
       _message $? $node $file_name
