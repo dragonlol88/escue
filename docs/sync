@@ -9,10 +9,10 @@ jvm.options       : elasticsearch configure
      .
      .
 
-Usage: escue sync-file [COMMAND] [OPTIONS] CLUSTER
+Usage: escue sync [COMMAND] [OPTIONS] CLUSTER
 
 Options:
-    -f  | --file   )   string  Install file location
+    -s  | --source )   string  Install file location
                                Required when ana command
     -i  |          )   string  identity file for connecting to remote server
     -n  | --node   )   string  node name
@@ -25,9 +25,8 @@ Options:
 
 Commands:
     jvm      Synchronize jvm.options configure file
-             ex - escue sync-file jvm -i [identity file] -n [node name] [cluster name]
+             ex - escue sync jvm -i [identity file] -n [node name] [cluster name]
     yml      Synchronize elasticsearch.yml configure file
-             ex - escue sync-file yml -i [identity file] -n [node name] [cluster name]
+             ex - escue sync yml -i [identity file] -n [node name] [cluster name]
     ana      Synchronize files related with analysis
-             ex - escue sync-file ana -f [file] -t [target directory] -i [identity file] [cluster name]
-    plugin   Synchronize plugins
+             ex - escue sync ana -s [file] -t [target directory] -i [identity file] [cluster name]

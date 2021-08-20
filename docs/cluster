@@ -1,0 +1,31 @@
+Usage: escue cluster [COMMAND] [OPTIONS] CLUSTER
+
+Cluster management support create, install, restart remove, list commands with plugins.
+Options:
+    -p | --plugin )                  Option for installing plugins
+                                     Required when installing plugins
+    -i            )     string       Identity files( *.pub or *.pem file)
+    -s | --source )     string       Install source. required when install
+                                     If elasticsearch server is to be installed, the source is install file(..tar.gz)
+                                     If plugin is to be installed, the source is plugin file or url or core(plugin name)
+    --ptype       )     string       Plugin type which must be either core or url or file.
+                                     Required when installing plugin.
+    -o            )     string       Ssh options which are seperated with comma ( ConnectTimeout=10,ConnectionAttempts=1)
+
+Commands:
+    create      Create cluster.
+                ex - escue cluster create [cluster-name]
+    install     Install cluster.
+                ex - escue cluster install -i [identity-file] -s [install file] [cluster name]
+                ex - escue cluster install -p --ptype core -s [core name]  -i [identity file] [cluster name]
+                     ... --ptype url -s [url] ...
+                     ... --ptype file -s [file] ...
+    restart     Restart cluster.
+                ex - escue cluster restart -i [identity-file] [cluster name]
+    remove      Remove cluster or Remove plugins
+                ex - escue cluster remove -i [identity-file] [cluster name]
+                ex - escue cluster remove -p -s [plugin name] -i [identity file] [cluster name]
+                If plugin is to be removed, check plugin name using related command.(escue cluster list part).
+    list        Listing cluster entries or plugin entries
+                ex - escue cluster list
+                ex - escue cluster list -p [cluster name]

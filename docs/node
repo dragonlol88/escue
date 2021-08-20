@@ -1,0 +1,29 @@
+Usage: escue node [COMMAND] [OPTIONS] NODE
+
+Options:
+    -c | --cluster )   string   A name of cluster
+                                Required always because cluster can be multiple.
+    -s | --source  )   string   Install file location.
+                                Required when install.
+    -i |           )   string   Identity file for connecting.
+                                Remote server.
+    --config       )   string   Configuration type(yml or jvm or server).
+                                Required when mod
+    -o             )   string   ssh or scp options
+
+Commands:
+    create      Create node.
+                ex - escue node create -c [cluster name]  [node name]
+    mod         modify node settings
+                ex - escue node mod -c [cluster name] --config [config type] [node name]
+    install     Install node
+                ex - escue node install -c [cluster name] -i [identity-file] -s [install file] [node name]
+    restart     Restart node
+                ex - escue node restart -c [cluster name] -i [identity-file]  [node name]
+    list        Listing node list
+                If no cluster is specified, It will be listing all cluster nodes
+                ex - escue node list
+
+
+
+

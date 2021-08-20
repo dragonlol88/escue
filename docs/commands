@@ -1,0 +1,20 @@
+
+                       ElasticSearch resCUE
+
+Usage: escue [OPTIONS] [MANAGEMENT COMMAND] [COMMAND] [COMMAND OPTIONS]
+
+Options:
+
+
+Management Commands:
+    cluster        Manage cluster.
+    node           Manage node.
+    sync      Manage files to be synchronized.
+
+Commands:
+    mod             modify settings related with node.
+    create          create cluster, node.
+    install         install cluster, node.
+    restart         Restart cluster and specific node.
+
+Run 'escue MANAGEMENT COMMAND --help' for more information on a command.
