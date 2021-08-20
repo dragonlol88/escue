@@ -55,8 +55,8 @@ function _install_per_node() {
     es_dir=$(cat <&$STDOUT_R | sed -n -e 's/\/// p')
     es_path="$install_path/$es_dir"
     echo $es_path > "$BASE/$ESPATH"
-    config_path="$es_path/config"
-    plugin_path="$es_path/$PLUGINPATH"
+    config_path="${es_path}/config"
+    plugin_path="${es_path}/$PLUGINPATH"
     analysis_path="$config_path/analysis"
 
     ssh_command "mkdir -p $plugin_path" && \
@@ -115,6 +115,7 @@ function _restart_per_node() {
   }
 
   function restart() {
+    ssh_command "sudo -b su; ulimit -n 65535; ulimit -l unlimited; sudo sysctl -w vm.max_map_count=262144" && \
     ssh_command "cd ${es_path}; bin/elasticsearch -d -p pid | exit"
   }
 
