@@ -28,8 +28,10 @@ function _remove_per_node() {
 
   function kill_process() {
     ssh_command "[[ -d $es_path ]] && cd $es_path; cat pid"
+    status=$?
     pid=$(cat <&$STDOUT_R)
-    ssh_command "kill -9 $pid"
+    [[ $status -eq 0 ]] && [[ -n $pid ]] && ssh_command "kill -9 $pid"
+    return 0
   }
 
   function remove() {
