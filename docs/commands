@@ -9,8 +9,8 @@ Options:
 Management Commands:
     cluster        Manage cluster.
     node           Manage node.
-    sync      Manage files to be synchronized.
-
+    sync           Manage files to be synchronized.
+    logs           Display transport logs
 Commands:
     mod             modify settings related with node.
     create          create cluster, node.
