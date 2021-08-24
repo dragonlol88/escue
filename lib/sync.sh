@@ -13,7 +13,7 @@ function message() {
     if [ $status -eq 0 ]; then
       printf "%s\n" "${node}: $file synchronization  is success."
     else
-      printf "%s\n"  "${node}: $file synchronization is failed." "check transport logs.(escue check transport-logs)"
+      printf "%s\n"  "${node}: $file synchronization is failed." "check transport logs.(escue logs)"
     fi
 }
 

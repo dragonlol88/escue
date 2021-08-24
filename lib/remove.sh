@@ -81,7 +81,7 @@ function _remove_plugin_per_node() {
     if [ $status -eq 0 ]; then
       printf "%s\n" "${node}: Remove $file is success."
     else
-      printf "%s\n"  "${node}: Remove $file is failed." "check transport logs.(escue check transport-logs)"
+      printf "%s\n"  "${node}: Remove $file is failed." "check transport logs.(escue logs)"
     fi
   }
 
