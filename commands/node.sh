@@ -6,12 +6,12 @@ unset FILE
 unset INDENTY_FILE
 unset CONFIG
 
-source "./lib/create.sh"
-source "./lib/install.sh"
-source "./lib/list.sh"
-source "./lib/change.sh"
-source "./lib/remove.sh"
-source "./config/globals"
+
+PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
+lib_path=$PARENT_PATH/lib
+libraries=($(ls $lib_path))
+for library in "${libraries[@]}"; do source $lib_path/$library; done
+source "${PARENT_PATH}/config/globals"
 
 function usage() {
   cat "./docs/node"

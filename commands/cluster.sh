@@ -4,11 +4,11 @@ unset COMMAND
 unset CLUSTER
 unset VERSION
 
-source "./lib/create.sh"
-source "./lib/install.sh"
-source "./lib/list.sh"
-source "./lib/remove.sh"
-
+PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
+lib_path=$PARENT_PATH/lib
+libraries=($(ls $lib_path))
+for library in "${libraries[@]}"; do source $lib_path/$library; done
+source "${PARENT_PATH}/config/globals"
 function usage()
 {
   cat "./docs/cluster"
@@ -46,8 +46,14 @@ CLUSTER="$@"
 [[ $COMMAND = 'install' ]] || [[ $COMMAND = 'remove' ]] && [[ -z $IS_PLUGIN ]] && [[ -n "$PLUGIN_TYPE" ]] && usage
 [[ -n "$PLUGIN_TYPE" ]] && [[ $PLUGIN_TYPE != "core" ]] && [[ $PLUGIN_TYPE != "file" ]] && [[ $PLUGIN_TYPE != "url" ]] && usage
 
+
+function delete_cluster() {
+  rm -rf $CLUSTER_DIR/$CLUSTER
+}
+
 case $COMMAND in
-  create  ) create_cluster "${PARENT_PATH}/cluster/" "$CLUSTER" ;;
+  delete  ) delete_cluster $CLUSTER ;;
+  create  ) create_cluster $CLUSTER ;;
   install )
     [[ -z $IS_PLUGIN ]] && \
     install_cluster $CLUSTER $SOURCE "$INDENTY_FILE" "$SSHOPTIONS" || \

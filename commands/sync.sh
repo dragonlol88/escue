@@ -11,8 +11,10 @@ unset ELASTIC_JVM
 unset ELASTIC_YML
 
 PARENT_PATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
-
-source "${PARENT_PATH}/lib/sync.sh"
+lib_path=$PARENT_PATH/lib
+libraries=($(ls $lib_path))
+for library in "${libraries[@]}"; do source $lib_path/$library; done
+source "${PARENT_PATH}/config/globals"
 
 function usage() {
   cat "${PARENT_PATH}/docs/sync"
