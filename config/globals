@@ -13,7 +13,7 @@ SEVERFILE='server'
 questionPath="$ROOTPATH/config/question"
 ESPATH="es_path"
 PLUGINPATH='es_plugins'
-
+ANALYSIS_PATH="config/analysis"
 #install
 INSTALL_DIR=$HOME/.local/bin/escue
 INSTALL_PACKAGES="commands,config,docs,es_http,lib"
