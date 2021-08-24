@@ -118,9 +118,9 @@ function get_param ()
 
 
 function parse_params(){
-  user=$(get_param $server_user_name_key "=" $1)
-  host=$(get_param $server_host_key "=" $1)
-  install_path=$(get_param $install_path_key "=" $1)
+  user=$(get_param $server_user_name_key ":" $1)
+  host=$(get_param $server_host_key ":" $1)
+  install_path=$(get_param $install_path_key ":" $1)
   port=$(get_param $http_port_key ":" $2)
   data_path=$(get_param $data_path_key ":" $2)
   logs_path=$(get_param $logs_path_key ":" $2)
