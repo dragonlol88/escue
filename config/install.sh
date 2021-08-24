@@ -1,31 +1,39 @@
 #! /bin/bash
 
 set -e
-script_pwd=$(pwd)
-source "${script_pwd}/config/globals"
 
-install_dir=$HOME/.local/bin/escue
+script_dir=$(pwd)
+config_dir=$(cd $(dirname "$0") || exit 1; pwd)
+source "${config_dir}/globals"
 
-if [ -d $install_dir ]; then
+
+if [ -d $INSTALL_DIR ]; then
   echo "escue is already installed on this machine"
 else
-  mkdir -p $install_dir && cd $install_dir
+  mkdir -p $INSTALL_DIR && cd $INSTALL_DIR
+  mkdir -p $LOGDIR && touch $TRANSPORTERRORLOGPATH
+  mkdir -p cluster
   # To manage user configurations(indices, node)
-  mkdir $USERS_DIR
   echo "installing escue...."
-  mkdir lib
-  cp -r $script_pwd/lib/* ./lib
-  cp $script_pwd/escue .
-  echo "Adding escue to bash command"
-  current_profile=''
-  if [ ! -e $HOME/.bash_profile ]; then
-    touch $HOME/.bash_profile
-    current_profile=$(cat $HOME/.profile)
-  else
-    current_profile=$(sed '/export PATH/d' $HOME/.bash_profile)
-  fi
 
-  printf '%s\n' "export PATH=${PATH}:$install_dir" "$current_profile" > $HOME/.bash_profile
+  IFS=',' read -ra packages <<< $INSTALL_PACKAGES
+  IFS=',' read -ra files <<< $INSTALL_FILES
+
+  for package in "${packages[@]}" ; do mkdir ${package}; cp -R "${script_dir}/${package}/" . ;done
+  for file in "${files[@]}" ; do cp $script_dir/$file . ; done
+
+  echo "Adding escue to bash command"
+  [[ ! -e $HOME/.bash_profile ]] && touch $HOME/.bash_profile
+
+  path_line_with_num=$(grep -n "PATH=*" $HOME/.bash_profile)
+  IFS=':' read -ra line_num <<< ${path_line_with_num}
+  origin_path=$(sed -n ''"${line_num}"' p' $HOME/.bash_profile)
+
+  if [ -z "$(grep $INSTALL_DIR $HOME/.bash_profile)" ]; then
+    new_path=${origin_path}:${INSTALL_DIR}
+    sed -i ''"${line_num}"' c '"${new_path}"'' $HOME/.bash_profile
+  fi
   chmod a+rx escue
+  source $HOME/.bash_profile
   echo "Install Complete"
 fi
