@@ -51,10 +51,11 @@ $ bash config/install.sh
 ```
 
 <h2>Uses</h2>
-Assuming that the ssh public key has been registered on remote severs where nodes will be installed. If you don't know what to do, see [this tutorial](https://opentutorials.org/module/432/3742).
-
+Assuming that the ssh public key has been registered on remote severs where nodes will be installed. If you don't know what to do, 
+see [this tutorial](https://opentutorials.org/module/432/3742).
 <br />
 First you must create cluster.
+
 ```shell script
 $ escue cluster create sunny
 ```
@@ -148,7 +149,7 @@ However, If there is a problem only with a node, use 'node' management command
 $ escue node remove -c sunny node-1 
 ```
 **Warning**: Because 'remove' command completely clear nodes completely including everything data and logs, If problems just are related with configurations 
-or synchronization, instead modify configuration, then use 'restart command'
+or synchronization, modify configuration, then use 'restart command'
 
 <h3>Modify node configurations</h3>
 The escue manages several configurations related with elasticsearch and server as file. The configurations related to elasticsearch are elasticsearch.yml and jvm.options. 
@@ -173,9 +174,9 @@ $ escue node mod -c sunny --config server node-1
 ```
 
 <h3>Synchronize configuration and files</h3>
-If you modify configurations of any node, the changes must be synchronized. So, escue supports synchronization command 'sync'. The Elasticsearch synchronized  
-process has some complex steps which ensure the success of the previous steps. Also, If sychronized process was not successful and applied, elasticsearch 
-engine will raise errors and services using this es engine wil failed. Because of these difficulties, only escue's 'sync'  transmits the files related to the 
+If you modify configurations of any node, the changes must be synchronized. So, escue supports synchronization command 'sync'. The Elasticsearch synchronization  
+process has some complex steps which ensure the success of the previous steps. Also, If a synchronization process was not successful and applied, elasticsearch 
+engine will raise errors and services using this es engine wil failed. Because of these difficulties, only escue's 'sync' transmits the files related to the 
 configuration, but not applied. <br /><br />
 
 * elasticsearch.yml synchronization
@@ -207,7 +208,7 @@ does not supported because of several problems. So, to complete analysis files s
 
 <h3>Restart remote node</h3>
 If you modify a node configurations and install plugins and synchronize files, in order to apply these changes, elasticsearch engine must be restarted.
-<br \>
+<br \><br \>
 
 * restart cluster
 ```shell script
@@ -237,9 +238,8 @@ analysis-icu   analysis-icu
 analysis-nori  analysis-nori
 ```
 
-<br />
 Let's install plugins
-
+<br />
 * core type a plugin installation
 ```shell script
 $escue cluster install -p --ptype core -s analysis-nori sunny
@@ -261,7 +261,14 @@ If installation is success, It will display below message
 node-1: Install analysis-nori is success.
 node-2: Install analysis-nori is success.
 ```
+<br />
+<h3>Display transport logs</h3>
+If command failed, display logs.
 
+```shell script
+$ escue logs
+```
+<br />
 
 **For more terminal interface infomations, type**
 ```shell script
