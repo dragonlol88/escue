@@ -4,26 +4,28 @@
 unset COMMAND
 
 PARENT_PATH=$( cd "$(dirname "$0")"|| exit 1; pwd )
-
 # shellcheck source=config/globals
 source "${PARENT_PATH}/config/globals"
 
-
 usage() {
-
-  cat "${PARENT_PATH}/usage/commands"
+  cat "${PARENT_PATH}/docs/commands"
 }
 
 case $1 in
-  cluster) COMMAND=$1 ; shift ;;
-  node)    COMMAND=$1 ; shift ;;
-  index)   COMMNAD=$1 ; shift ;;
+  cluster   ) COMMAND=$1 ; shift ;;
+  node      ) COMMAND=$1 ; shift ;;
+  index     ) COMMNAD=$1 ; shift ;;
+  sync      ) COMMAND=$1 ; shift ;;
+  logs      ) COMMAND=$1 ; shift ;;
   *)
     usage
     ;;
 esac
 
 case $COMMAND in
-      cluster) bash "${PARENT_PATH}/commands/cluster.sh" "$@";;
-      node   ) bash "${PARENT_PATH}/commands/node.sh" "$@";;
+      cluster   ) bash "${PARENT_PATH}/commands/cluster.sh" "$@";;
+      node      ) bash "${PARENT_PATH}/commands/node.sh" "$@";;
+      sync      ) bash "${PARENT_PATH}/commands/sync.sh" "$@";;
+      logs      ) cat "${PARENT_PATH}/$TRANSPORTERRORLOGPATH" ;;
+
 esac
