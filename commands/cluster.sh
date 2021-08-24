@@ -11,7 +11,7 @@ for library in "${libraries[@]}"; do source $lib_path/$library; done
 source "${PARENT_PATH}/config/globals"
 function usage()
 {
-  cat "./docs/cluster"
+  cat "${PARENT_PATH}/docs/cluster"
   exit 1
 }
 
