@@ -38,9 +38,9 @@ teardown() {
         config.path=
 
         [server]
-        server.username=ec2-user
-        server.host=10.12.101.102
-        install.path=/home/ec2-user/install
+        server.username: ec2-user
+        server.host: 10.12.101.102
+        install.path: /home/ec2-user/install
        """ > serverfile
 
   echo """
