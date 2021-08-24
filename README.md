@@ -52,16 +52,16 @@ $ bash config/install.sh
 
 <h2>Uses</h2>
 Assuming that the ssh public key has been registered on remote severs where nodes will be installed. If you don't know what to do, 
-see [this tutorial](https://opentutorials.org/module/432/3742).
-<br />
-First you must create cluster.
+see 
+[this tutorial](https://opentutorials.org/module/432/3742).
+<br /><br />
+First you must create cluster.<br /><br />
 
 ```shell script
 $ escue cluster create sunny
 ```
 
-if success, sunny cluster will be created.
-Check clusters
+if success, sunny cluster will be created. Check clusters
 
 ```shell script
 $ escue cluster list
@@ -138,9 +138,7 @@ $ escue node install -s ./elasticsearch-7.13.4-linux-x86_64.tar.gz -c sunny node
 
 
 <h3>Remove nodes across multiple servers</h3>
-If there is a problem with a cluster and you have to kill all the nodes in cluster,
-use the 'remove' command.
-
+If there is a problem with a cluster and you have to kill all the nodes in cluster, use the 'remove' command.<br /><br />
 ```shell script
 $ escue cluster remove sunny
 ```
@@ -155,8 +153,7 @@ or synchronization, modify configuration, then use 'restart command'
 The escue manages several configurations related with elasticsearch and server as file. The configurations related to elasticsearch are elasticsearch.yml and jvm.options. 
 Also, the configuration related to remote server is server files.<br /><br />
 
-Because it is difficult to modify configurations as terminal interface and very tired to typing the command in terminal, escue is made to directly edit configuration. <br /><br />
-
+Because it is difficult to modify configurations as terminal interface and very tired to typing the command in terminal, escue is made to directly edit configuration. <br />
 
 * To modify elasticsearch.yml 
 ```shell script
@@ -208,7 +205,7 @@ does not supported because of several problems. So, to complete analysis files s
 
 <h3>Restart remote node</h3>
 If you modify a node configurations and install plugins and synchronize files, in order to apply these changes, elasticsearch engine must be restarted.
-<br \><br \>
+<br /><br />
 
 * restart cluster
 ```shell script
@@ -261,6 +258,12 @@ If installation is success, It will display below message
 node-1: Install analysis-nori is success.
 node-2: Install analysis-nori is success.
 ```
+
+<h3>Remove a plugin across nodes</h3>
+```shell script
+$ escue cluster remove -p -s analysis-nori sunny
+```
+
 <br />
 <h3>Display transport logs</h3>
 If command failed, display logs.
