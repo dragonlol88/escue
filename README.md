@@ -52,10 +52,11 @@ $ bash config/install.sh
 
 <h2>Uses</h2>
 Assuming that the ssh public key has been registered on remote severs where nodes will be installed.<br /> If you don't know what to do, 
-see [this blog post](https://mohitgoyal.co/2021/01/12/basics-of-ssh-generate-ssh-key-pairs-and-establish-ssh-connections-part-1)
+see [this blog post](https://mohitgoyal.co/2021/01/12/basics-of-ssh-generate-ssh-key-pairs-and-establish-ssh-connections-part-1).
 <br /><br />
 First you must create cluster.
- ```shell script
+
+```shell script
 $ escue cluster create sunny
 ```
 
@@ -65,11 +66,13 @@ Check clusters
 ```shell script
 $ escue cluster list
 ```
+
 Next, create node, and typing the elasticsearch configuration and server information to connect remote sever.
 
 ```shell script
 $ escue node create -c sunny node-1
 ```
+
 Then the following questions appear.
 ```shell script
 # Roles setting
@@ -174,7 +177,7 @@ $ escue node mod -c sunny --config server node-1
 If you modify configurations of any node, the changes must be synchronized. So, escue supports synchronization command 'sync'. The Elasticsearch synchronized  
 process has some complex steps which ensure the success of the previous steps. Also, If sychronized process was not successful and applied, elasticsearch 
 engine will raise errors and services using this es engine wil failed. Because of these difficulties, only escue's 'sync'  transmits the files related to the 
-configuration, but not applied. <br />
+configuration, but not applied. <br /><br />
 
 * elasticsearch.yml synchronization
 ```shell script
