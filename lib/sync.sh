@@ -46,7 +46,7 @@ function sync_jvm {
   check_espath || return 1
   Transport "${transport_params[@]}"
 
-  _sync $jvm_file $es_path/config
+  _sync $jvm_file $es_path/config/$JVMDIR
   message $? $node $JVMFILE
 }
 
@@ -77,8 +77,8 @@ function _sync_ana_per_node {
   check_espath || return 1
   Transport "${transport_params[@]}"
 
-  [[ -z $target ]] && sync_target="$es_path/config/analysis"
-  [[ -n "$target" ]] && sync_target="$es_path/config/$target"
+  [[ -z $target ]] && sync_target="$es_path/$ANALYSIS_PATH"
+  [[ -n "$target" ]] && sync_target="$es_path/$ANALYSIS_PATH/$target"
   ssh_command "[[ ! -d $sync_target ]] && mkdir -p $sync_target"
   _sync $source $sync_target
   message $? $node $source
