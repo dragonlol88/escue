@@ -34,7 +34,7 @@ column,
 paste
 
 If ESCUE can not work in your environment, first check that tools installed. If not then....
-you consider typing 'rm -rf escue'.. never fucking me...
+you consider typing 'rm -rf escue'..
 
 
 <h2>Installation</h2>
@@ -50,21 +50,22 @@ $bash config/install.sh
 
 <h2>Uses</h2>
 Assuming that the ssh public key has been registered on remote severs where nodes will be installed.<br />
-If you don't know what to do, see [this blog post](https://mohitgoyal.co/2021/01/12/basics-of-ssh-generate-ssh-key-pairs-and-establish-ssh-connections-part-1) <br /><br />
+If you don't know what to do, see [this blog post](https://mohitgoyal.co/2021/01/12/basics-of-ssh-generate-ssh-key-pairs-and-establish-ssh-connections-part-1)
+<br /><br />
 First you must create cluster.
  ```shell script
-$escue cluster create sunny
+$ escue cluster create sunny
 ```
 if success, sunny cluster will be created.
 Check clusters
 
 ```shell script
-$escue cluster list
+$ escue cluster list
 ```
 Next, create node, and typing the elasticsearch configuration and server information to connect remote sever.
 
 ```shell script
-$escue node create -c sunny node-1
+$ escue node create -c sunny node-1
 ```
 Then the following questions appear.
 ```shell script
@@ -129,7 +130,94 @@ $ escue cluster install -s ./elasticsearch-7.13.4-linux-x86_64.tar.gz -i ~/.ssh/
 $ escue node install -s ./elasticsearch-7.13.4-linux-x86_64.tar.gz -c sunny node-1
 ```
 
-<h3>Install plugin across nodes</h3>
+
+<h3>Remove nodes across multiple servers</h3>
+If there is a problem with a cluster and you have to kill all the nodes in cluster,
+use the 'remove' command.
+
+```shell script
+$ escue cluster remove sunny
+```
+However, If there is a problem only with a node, use 'node' management command
+```shell script
+$ escue node remove -c sunny node-1 
+```
+Warning: Because 'remove' command completely clear nodes completely including everything data and logs,
+If problems just are related with configurations or synchronization, instead modify configuration, then use 'restart command'
+
+<h3>Modify node configurations</h3>
+The escue manages several configurations related with elasticsearch and server as file. The configurations related to elasticsearch 
+are elasticsearch.yml and jvm.options. Also, the configuration related to remote server is server files.<br /><br />
+
+Because it is difficult to modify configurations as terminal interface and very tired to typing the command in terminal,
+escue is made to directly edit configuration. <br /><br />
+
+
+* To modify elasticsearch.yml 
+```shell script
+$ escue node mod -c sunny --config yml node-1
+```
+
+* To modify jvm.options
+```shell script
+$ escue node mod -c sunny --config jvm node-1
+```
+
+* To modify servers
+```shell script
+$ escue node mod -c sunny --config server node-1
+```
+
+<h3>Synchronize configuration and files</h3>
+If you modify configurations of any node, the changes must be synchronized. So, escue supports synchronization command 'sync'.
+The Elasticsearch synchronized  process has some complex steps which ensure the success of the previous steps. 
+Also, If sychronized process was not successful and applied, elasticsearch engine will raise errors and services using this es engine wil failed.
+Because of these difficulties, only escue's 'sync'  transmits the files related to the configuration, but not applied.
+
+* elasticsearch.yml synchronization
+```shell script
+$ escue sync yml -n node-1 sunny
+```
+
+* jvm.options synchronization
+```shell script
+$ escue sync jvm -n node-1 sunny
+```
+* files related with analysis synchronization
+
+```shell script
+$ escue sync ana -s synonyms.txt -t escue-project sunny
+```
+Because the base target directory is config/analysis, If -t(target directory) is specified, then the file will be saved in base/target directory.
+From above example, the synonyms.txt will be saved in config/analysis/escue-project.<br />
+ 
+If -t is not specified, default save directory will be config/analysis.
+
+```shell script
+$ escue sync ana -s synonyms.txt sunny
+```
+
+Warning: Files related with analysis synchronization cannot specify a node because the files are managed by clusters. 
+         And index close and open does not supported because of several problems. So, to complete analysis files synchronization process,
+         you perform index close, open in kibana or using curl 
+
+
+<h3>Restart remote node</h3>
+If you modify a node configurations and install plugins and synchronize files, in order to apply these changes, elasticsearch engine
+must be restarted.
+
+* restart cluster
+ ```shell script
+$ escue cluster restart sunny
+ ```
+
+* restart specific node
+ ```shell script
+$ escue node restart -c sunny node-1
+ ```
+
+ 
+<h3>Install a plugin across nodes</h3>
 Plugin install just supported from cluster command because of synchronization issue. And if already plugin installed, reinstall that plugin.
 Anyway, Because plugin is applied when elasticsearch restarted, reinstalled has no problem. But while reinstalling, 
 If plugin install is failed, you must check plugin list.
@@ -137,9 +225,9 @@ If plugin install is failed, you must check plugin list.
 First, Check plugin list
 
 ```shell script
-$ escue cluster -p list sunny
+$ escue cluster list -p sunny
 ```
-This command display installed plugin list per node in sunny
+This command display installed plugin list per node like below in sunny cluster.
 
 ```shell script
 node-1         node-2
@@ -148,4 +236,42 @@ analysis-nori  analysis-nori
 ```
 
 Let's install plugins
+
+* core type a plugin installation
+```shell script
+$escue cluster install -p --ptype core -s analysis-nori sunny
+```
+
+* file type a plugin installation
+```shell script
+$escue cluster install -p --ptype file -s path/to/plugin.zip sunny
+```
+
+* url type a plugin installation
+```shell script
+$escue cluster install -p --ptype url -s https://some.domain/path/to/plugin.zip sunny
+```
+
+If installation is success, It will display below message
+
+```shell script
+node-1: Install analysis-nori is success.
+node-2: Install analysis-nori is success.
+```
+
+
+For more terminal interface infomations, type
+```shell script
+$ escue --help
+```  
+
+```shell script
+$ escue [management command] --help
+```  
+
+* For cluster 
+```shell script
+$ escue cluster --help
+```  
+
 
