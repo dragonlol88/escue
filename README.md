@@ -3,16 +3,15 @@
 <p align="center">Elasticsearch terminal interface manager</p>
 
 <h2>Description</h2>
-Elasticsearch is a big data distributed search system. It supports very diverse search functions and shows fast search 
-speed using inverted index. However, Managing elasticsearch cluster has some annoying works which are installation on each sever
-or neccessary files syncronization or to restart es etc... . So, ESCUE is motivated from that works and supports some functions
-that can solve this annoying and uncomportable works at the toy levels.
+Elasticsearch is a big data distributed search system. It supports very diverse search functions and shows fast search speed using inverted index. 
+However, Managing elasticsearch cluster has some annoying works which are installation on each sever or neccessary files syncronization or to restart es etc... . 
+So, ESCUE is motivated from that works and supports some functions that can solve this annoying and uncomportable works at the toy levels.
 <br />
 <br />
-ESCUE is linux terminal interface application and in order to manage distributed system across multiple servers, ESCUE requires 
-the identity file containing ssh private key in almost any tasks. So I recommend you before using, that register ssh public 
-key on multiple severs where node will be installed first. Otherwise, in almost tasks, identity file option must be speicified.
-If you discover yourself typing -i ......... in the terminal, you might give up using ESCUE.
+ESCUE is linux terminal interface application and in order to manage distributed system across multiple servers, ESCUE requires the identity file 
+containing ssh private key in almost any tasks. So I recommend you before using, that register ssh public key on multiple severs where node will 
+be installed first. Otherwise, in almost tasks, identity file option must be speicified. If you discover yourself typing -i ......... in the terminal, 
+you might give up using ESCUE.
 
 
 <h2>OS dependencies</h2>
@@ -20,7 +19,7 @@ I develop ESCUE in 'centos' operating system. So....I just wish so much that ESC
 
 <h2>Shell dependencies</h2>
 
-ESCUE is developed using shell programming as full power(purity 100%). Because I don't know, don't ask me that reason.
+ESCUE is developed using shell programming as full power(purity 100%). Because I don't know, don't ask me that reason. 
 Also, I just hope ......... that...... working....in other shell and versions. sorry...
 
 shell: bash <br />
@@ -39,23 +38,27 @@ you consider typing 'rm -rf escue'..
 
 <h2>Installation</h2>
 First, git clone
+
 ```shell script
-$git clone <url>
+$ git clone <url>
 ```
+
 Second, move escue
+
 ```shell script
-$cd escue
-$bash config/install.sh
+$ cd escue
+$ bash config/install.sh
 ```
 
 <h2>Uses</h2>
-Assuming that the ssh public key has been registered on remote severs where nodes will be installed.<br />
-If you don't know what to do, see [this blog post](https://mohitgoyal.co/2021/01/12/basics-of-ssh-generate-ssh-key-pairs-and-establish-ssh-connections-part-1)
+Assuming that the ssh public key has been registered on remote severs where nodes will be installed.<br /> If you don't know what to do, 
+see [this blog post](https://mohitgoyal.co/2021/01/12/basics-of-ssh-generate-ssh-key-pairs-and-establish-ssh-connections-part-1)
 <br /><br />
 First you must create cluster.
  ```shell script
 $ escue cluster create sunny
 ```
+
 if success, sunny cluster will be created.
 Check clusters
 
@@ -142,15 +145,14 @@ However, If there is a problem only with a node, use 'node' management command
 ```shell script
 $ escue node remove -c sunny node-1 
 ```
-Warning: Because 'remove' command completely clear nodes completely including everything data and logs,
-If problems just are related with configurations or synchronization, instead modify configuration, then use 'restart command'
+**Warning**: Because 'remove' command completely clear nodes completely including everything data and logs, If problems just are related with configurations 
+or synchronization, instead modify configuration, then use 'restart command'
 
 <h3>Modify node configurations</h3>
-The escue manages several configurations related with elasticsearch and server as file. The configurations related to elasticsearch 
-are elasticsearch.yml and jvm.options. Also, the configuration related to remote server is server files.<br /><br />
+The escue manages several configurations related with elasticsearch and server as file. The configurations related to elasticsearch are elasticsearch.yml and jvm.options. 
+Also, the configuration related to remote server is server files.<br /><br />
 
-Because it is difficult to modify configurations as terminal interface and very tired to typing the command in terminal,
-escue is made to directly edit configuration. <br /><br />
+Because it is difficult to modify configurations as terminal interface and very tired to typing the command in terminal, escue is made to directly edit configuration. <br /><br />
 
 
 * To modify elasticsearch.yml 
@@ -169,10 +171,10 @@ $ escue node mod -c sunny --config server node-1
 ```
 
 <h3>Synchronize configuration and files</h3>
-If you modify configurations of any node, the changes must be synchronized. So, escue supports synchronization command 'sync'.
-The Elasticsearch synchronized  process has some complex steps which ensure the success of the previous steps. 
-Also, If sychronized process was not successful and applied, elasticsearch engine will raise errors and services using this es engine wil failed.
-Because of these difficulties, only escue's 'sync'  transmits the files related to the configuration, but not applied.
+If you modify configurations of any node, the changes must be synchronized. So, escue supports synchronization command 'sync'. The Elasticsearch synchronized  
+process has some complex steps which ensure the success of the previous steps. Also, If sychronized process was not successful and applied, elasticsearch 
+engine will raise errors and services using this es engine wil failed. Because of these difficulties, only escue's 'sync'  transmits the files related to the 
+configuration, but not applied. <br />
 
 * elasticsearch.yml synchronization
 ```shell script
@@ -197,15 +199,13 @@ If -t is not specified, default save directory will be config/analysis.
 $ escue sync ana -s synonyms.txt sunny
 ```
 
-Warning: Files related with analysis synchronization cannot specify a node because the files are managed by clusters. 
-         And index close and open does not supported because of several problems. So, to complete analysis files synchronization process,
-         you perform index close, open in kibana or using curl 
+**Warning**: Files related with analysis synchronization cannot specify a node because the files are managed by clusters.  And index close and open 
+does not supported because of several problems. So, to complete analysis files synchronization process, you perform index close, open in kibana or using curl 
 
 
 <h3>Restart remote node</h3>
-If you modify a node configurations and install plugins and synchronize files, in order to apply these changes, elasticsearch engine
-must be restarted.
-
+If you modify a node configurations and install plugins and synchronize files, in order to apply these changes, elasticsearch engine must be restarted.
+<br \>
 * restart cluster
  ```shell script
 $ escue cluster restart sunny
@@ -218,12 +218,10 @@ $ escue node restart -c sunny node-1
 
  
 <h3>Install a plugin across nodes</h3>
-Plugin install just supported from cluster command because of synchronization issue. And if already plugin installed, reinstall that plugin.
-Anyway, Because plugin is applied when elasticsearch restarted, reinstalled has no problem. But while reinstalling, 
-If plugin install is failed, you must check plugin list.
-
+Plugin install just supported from cluster command because of synchronization issue. And if already plugin installed, reinstall that plugin. Anyway, Because plugin 
+is applied when elasticsearch restarted, reinstalled has no problem. But while reinstalling, If plugin install is failed, you must check plugin list.
+<br /><br />
 First, Check plugin list
-
 ```shell script
 $ escue cluster list -p sunny
 ```
@@ -234,7 +232,7 @@ node-1         node-2
 analysis-icu   analysis-icu
 analysis-nori  analysis-nori
 ```
-
+<br />
 Let's install plugins
 
 * core type a plugin installation
@@ -260,7 +258,7 @@ node-2: Install analysis-nori is success.
 ```
 
 
-For more terminal interface infomations, type
+**For more terminal interface infomations, type**
 ```shell script
 $ escue --help
 ```  
