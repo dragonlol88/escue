@@ -168,7 +168,7 @@ function _install_plugin_per_node() {
   }
 
   function _install_plugin_from_file() {
-    ssh_command "[[ ! -d $plugin_path ]] && mkdir -p $plugin_path" && \
+    ssh_command "[[ ! -d $plugin_path ]] && mkdir -p $plugin_path"
     scp_transport $source $plugin_path && \
     ssh_command "cd $es_path; bin/elasticsearch-plugin install file://$plugin_path/$file_name"
   }
