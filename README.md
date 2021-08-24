@@ -209,21 +209,23 @@ does not supported because of several problems. So, to complete analysis files s
 <h3>Restart remote node</h3>
 If you modify a node configurations and install plugins and synchronize files, in order to apply these changes, elasticsearch engine must be restarted.
 <br \>
+
 * restart cluster
- ```shell script
+```shell script
 $ escue cluster restart sunny
- ```
+```
 
 * restart specific node
- ```shell script
+```shell script
 $ escue node restart -c sunny node-1
- ```
+```
 
  
 <h3>Install a plugin across nodes</h3>
 Plugin install just supported from cluster command because of synchronization issue. And if already plugin installed, reinstall that plugin. Anyway, Because plugin 
 is applied when elasticsearch restarted, reinstalled has no problem. But while reinstalling, If plugin install is failed, you must check plugin list.
 <br /><br />
+
 First, Check plugin list
 ```shell script
 $ escue cluster list -p sunny
@@ -235,6 +237,7 @@ node-1         node-2
 analysis-icu   analysis-icu
 analysis-nori  analysis-nori
 ```
+
 <br />
 Let's install plugins
 
