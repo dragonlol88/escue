@@ -52,10 +52,10 @@ $ bash config/install.sh
 
 <h2>Uses</h2>
 Assuming that the ssh public key has been registered on remote severs where nodes will be installed.<br /> If you don't know what to do, 
-see 
+see [this blog post](https://mohitgoyal.co/2021/01/12/basics-of-ssh-generate-ssh-key-pairs-and-establish-ssh-connections-part-1)
 
 
-[this blog post](https://mohitgoyal.co/2021/01/12/basics-of-ssh-generate-ssh-key-pairs-and-establish-ssh-connections-part-1)
+
 First you must create cluster.
 
 ```shell script
