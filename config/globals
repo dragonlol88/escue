@@ -10,13 +10,13 @@ YMLFILE='elasticsearch.yml'
 JVMDIR='jvm.options.d'
 JVMFILE='jvm.options'
 SEVERFILE='server'
-questionPath='/home/ec2-user/escue/config/question'
+questionPath="$ROOTPATH/config/question"
 ESPATH="es_path"
 PLUGINPATH='es_plugins'
 
 #install
 INSTALL_DIR=$HOME/.local/bin/escue
-INSTALL_PACKAGES="commands,config,docs,http_api,lib"
+INSTALL_PACKAGES="commands,config,docs,es_http,lib"
 INSTALL_FILES="escue"
 
 # elasticsearch.yml
