@@ -46,8 +46,9 @@ function get_plugin_list() {
   files=()
 
   for node in "${nodes[@]}"; do
+    [[ ! -f $basedir/$node/$PLUGINPATH ]] && return 1
     files+=($(mktemp))
-    cat $basedir/$node/$plug/$PLUGINPATH | sed '1 i '"${node}"'' > "${files[-1]}"
+    cat $basedir/$node/$PLUGINPATH | sed '1 i '"${node}"'' > "${files[-1]}" || return 1
   done
 
   paste -d , "${files[@]}" > $tempfile
