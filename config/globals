@@ -1,9 +1,9 @@
 #! /bin/bash
 
-ROOTPATH="$(pwd)"
-CLUSTER_DIR="$(pwd)/cluster"
-QUSTION_PATH="$(pwd)/config/question"
-LOGDIR="${ROOTPATH}/logs"
+ROOTPATH=$( cd "$(dirname "$0")" && cd .. || exit 1; pwd )
+CLUSTER_DIR="$ROOTPATH/cluster"
+QUSTION_PATH="$ROOTPATH/config/question"
+LOGDIR="logs"
 TRANSPORTERRORLOGPATH="${LOGDIR}/transport_error.log"
 TRANSPORTLOGPATH="${LOGDIR}/transport.log"
 YMLFILE='elasticsearch.yml'
@@ -12,7 +12,12 @@ JVMFILE='jvm.options'
 SEVERFILE='server'
 questionPath='/home/ec2-user/escue/config/question'
 ESPATH="es_path"
-PLUGINPATH='es_plugin'
+PLUGINPATH='es_plugins'
+
+#install
+INSTALL_DIR=$HOME/.local/bin/escue
+INSTALL_PACKAGES="commands,config,docs,http_api,lib"
+INSTALL_FILES="escue"
 
 # elasticsearch.yml
 cluster_name_key="cluster.name"
