@@ -139,13 +139,17 @@ $ escue node install -s ./elasticsearch-7.13.4-linux-x86_64.tar.gz -c sunny node
 
 <h3>Remove nodes across multiple servers</h3>
 If there is a problem with a cluster and you have to kill all the nodes in cluster, use the 'remove' command.<br /><br />
+
 ```shell script
 $ escue cluster remove sunny
 ```
+
 However, If there is a problem only with a node, use 'node' management command
+
 ```shell script
 $ escue node remove -c sunny node-1 
 ```
+
 **Warning**: Because 'remove' command completely clear nodes completely including everything data and logs, If problems just are related with configurations 
 or synchronization, modify configuration, then use 'restart command'
 
@@ -156,16 +160,19 @@ Also, the configuration related to remote server is server files.<br /><br />
 Because it is difficult to modify configurations as terminal interface and very tired to typing the command in terminal, escue is made to directly edit configuration. <br />
 
 * To modify elasticsearch.yml 
+
 ```shell script
 $ escue node mod -c sunny --config yml node-1
 ```
 
 * To modify jvm.options
+
 ```shell script
 $ escue node mod -c sunny --config jvm node-1
 ```
 
 * To modify servers
+
 ```shell script
 $ escue node mod -c sunny --config server node-1
 ```
@@ -177,19 +184,23 @@ engine will raise errors and services using this es engine wil failed. Because o
 configuration, but not applied. <br /><br />
 
 * elasticsearch.yml synchronization
+
 ```shell script
 $ escue sync yml -n node-1 sunny
 ```
 
 * jvm.options synchronization
+
 ```shell script
 $ escue sync jvm -n node-1 sunny
 ```
+
 * files related with analysis synchronization
 
 ```shell script
 $ escue sync ana -s synonyms.txt -t escue-project sunny
 ```
+
 Because the base target directory is config/analysis, If -t(target directory) is specified, then the file will be saved in base/target directory.
 From above example, the synonyms.txt will be saved in config/analysis/escue-project.<br />
  
@@ -208,11 +219,13 @@ If you modify a node configurations and install plugins and synchronize files, i
 <br /><br />
 
 * restart cluster
+
 ```shell script
 $ escue cluster restart sunny
 ```
 
 * restart specific node
+
 ```shell script
 $ escue node restart -c sunny node-1
 ```
@@ -224,9 +237,11 @@ is applied when elasticsearch restarted, reinstalled has no problem. But while r
 <br /><br />
 
 First, Check plugin list
+
 ```shell script
 $ escue cluster list -p sunny
 ```
+
 This command display installed plugin list per node like below in sunny cluster.
 
 ```shell script
@@ -238,18 +253,21 @@ analysis-nori  analysis-nori
 Let's install plugins
 <br />
 * core type a plugin installation
+
 ```shell script
-$escue cluster install -p --ptype core -s analysis-nori sunny
+$ escue cluster install -p --ptype core -s analysis-nori sunny
 ```
 
 * file type a plugin installation
+
 ```shell script
-$escue cluster install -p --ptype file -s path/to/plugin.zip sunny
+$ escue cluster install -p --ptype file -s path/to/plugin.zip sunny
 ```
 
 * url type a plugin installation
+
 ```shell script
-$escue cluster install -p --ptype url -s https://some.domain/path/to/plugin.zip sunny
+$ escue cluster install -p --ptype url -s https://some.domain/path/to/plugin.zip sunny
 ```
 
 If installation is success, It will display below message
@@ -260,17 +278,19 @@ node-2: Install analysis-nori is success.
 ```
 
 <h3>Remove a plugin across nodes</h3>
+
 ```shell script
 $ escue cluster remove -p -s analysis-nori sunny
 ```
-
 <br />
+
 <h3>Display transport logs</h3>
 If command failed, display logs.
 
 ```shell script
 $ escue logs
 ```
+
 <br />
 
 **For more terminal interface infomations, type**
