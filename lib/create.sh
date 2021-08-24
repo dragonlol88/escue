@@ -21,8 +21,8 @@ function create_cluster()
 function configure_node()
 {
 
-  configs+=(["yml_$cluster_name"]="$1")
-  configs+=(["yml_$node_name"]="$2")
+  configs+=(["yml_$cluster_name_key"]="$1")
+  configs+=(["yml_$node_name_key"]="$2")
   while read question; do
     count=0
     while read line; do
@@ -84,6 +84,14 @@ function create_node()
 function _format_file() {
   prefix=$1
   for key in "${!configs[@]}"; do
+    [[ -z ${configs[${key}]} ]] && continue
+    if [ $prefix = "jvm_" ]; then
+      nky=${key/$prefix/}
+      if [ $nky = "$jvm_heap_key" ]; then
+        pairs+=("-Xms${configs[${key}]}" "-Xmx${configs[${key}]}")
+        continue
+      fi
+    fi
 
     if [[ -n $(echo $key | grep $prefix.\\+$) ]]; then
       nky=${key/$prefix/}
@@ -95,6 +103,7 @@ function _format_file() {
     fi
   done
 }
+
 
 function yml_writer() {
   declare -a pairs
