@@ -1,9 +1,5 @@
 #! /bin/bash
 
-source "./config/globals"
-source "./lib/utils.sh"
-source "./lib/transport.sh"
-
 function _sync() {
   declare -r source=$1
   declare -r target=$2

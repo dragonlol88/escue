@@ -1,6 +1,5 @@
 #! /bin/bash
 
-source "./config/globals"
 
 function get_cluster_lst() {
 

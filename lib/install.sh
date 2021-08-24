@@ -1,10 +1,5 @@
 #! /bin/bash
 
-source "./config/globals"
-source "./lib/utils.sh"
-source "./lib/transport.sh"
-source "./lib/formatter.sh"
-
 function install_cluster() {
   cluster=$1; shift
   nodes=($(ls $CLUSTER_DIR/$cluster))

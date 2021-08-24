@@ -1,9 +1,5 @@
 #! /bin/bash
 
-
-source "./lib/utils.sh"
-source "./config/globals"
-
 function create_cluster()
 {
   # register cluster
@@ -11,20 +7,15 @@ function create_cluster()
 
   # $1  cluster directory
   # $2  cluster name
-
-  [[ ! -d "${1}" ]] && mkdir -p $1
-
-  cluster=$2
-  cur_loc=$( cd "$1" || exit 1; pwd)
-
-  check_for "${cur_loc}/${cluster}"
-
-  # status check
-  STATUS=$?
+  cluster=$1
+  cluster_dir="${CLUSTER_DIR}/${cluster}"
   msg="$cluster has been added already\nCheck clusters (escue cluster list) "
-  [[ $STATUS -ne 0 ]] && echo -e $msg && return 1
-  move_to "${cur_loc}/$cluster" && return 0 || return 1
-
+  if [ -d $cluster_dir ]; then
+    echo -e $msg; return 1
+  else
+    mkdir -p $cluster_dir
+    echo "$cluster: creation is success"; return 0
+  fi
 }
 
 function configure_node()

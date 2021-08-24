@@ -1,7 +1,4 @@
-source "./config/globals"
-source "./lib/utils.sh"
-source "./lib/transport.sh"
-
+#! /bin/bash
 
 function remove_cluster(){
   cluster=$1; shift

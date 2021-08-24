@@ -1,7 +1,5 @@
 #! /bin/bash
 
-source "./config/globals"
-
 
 parse_options() {
   # trim 양쪽 space
