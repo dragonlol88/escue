@@ -90,7 +90,7 @@ Transport()
   # $1 location which raise error from
   # $2 stderr file descriptor temporally
   msg="From: $1 Host: $host Message: $(cat <&$2)"
-  echo "[ `date` $msg ]" &>> $TRANSPORTERRORLOGPATH
+  echo "[ `date` $msg ]" &>> $ROOTPATH/$TRANSPORTERRORLOGPATH
   }
 
 }
