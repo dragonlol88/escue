@@ -51,9 +51,10 @@ $ bash config/install.sh
 ```
 
 <h2>Uses</h2>
-Assuming that the ssh public key has been registered on remote severs where nodes will be installed. If you don't know what to do, 
+Assuming that the ssh public key has been registered on the remote severs where nodes will be installed. If you don't know what to do, 
 see 
-[this tutorial](https://opentutorials.org/module/432/3742).
+[this tutorial](https://opentutorials.org/module/432/3742). <br />
+Also, because the escue only does support archive installation, elasticsearch must be downloaded from [archive](https://www.elastic.co/kr/downloads/elasticsearch)
 <br /><br />
 First you must create cluster.<br /><br />
 
@@ -151,7 +152,7 @@ $ escue node remove -c sunny node-1
 ```
 
 **Warning**: Because 'remove' command completely clear nodes completely including everything data and logs, If problems just are related with configurations 
-or synchronization, modify configuration, then use 'restart command'
+or synchronization, modify configuration, then use 'restart command'. 
 
 <h3>Modify node configurations</h3>
 The escue manages several configurations related with elasticsearch and server as file. The configurations related to elasticsearch are elasticsearch.yml and jvm.options. 
