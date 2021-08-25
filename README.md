@@ -52,11 +52,12 @@ $ bash config/install.sh
 
 <h2>Uses</h2>
 Assuming that the ssh public key has been registered on the remote severs where nodes will be installed. If you don't know what to do, 
-see 
-[this tutorial](https://opentutorials.org/module/432/3742). <br />
-Also, because the escue only does support archive installation, elasticsearch must be downloaded from [archive](https://www.elastic.co/kr/downloads/elasticsearch)
+see below ssh tutorial links. <br />
+Also, because the escue only does support archive installation, elasticsearch must be downloaded from archive.<br /><br />
+* [elasticsearch archive](https://www.elastic.co/kr/downloads/elasticsearch)
+* [ssh tutorial](https://opentutorials.org/module/432/3742)
 <br /><br />
-First you must create cluster.<br /><br />
+First you must create cluster.<br />
 
 ```shell script
 $ escue cluster create sunny
